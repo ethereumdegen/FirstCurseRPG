@@ -1,0 +1,17 @@
+class Scene_MenuBase < Scene_Base
+  def create_background
+    @background_sprite = Sprite.new
+    @background_sprite.bitmap = Cache.system("menu_bg")
+  end
+end
+class Window_Base < Window
+  def initialize(x, y, width, height)
+    super
+    self.windowskin = Cache.system("Window")
+    update_padding
+    update_tone
+    create_contents
+    @opening = @closing = false
+    self.back_opacity = 255
+  end
+end
