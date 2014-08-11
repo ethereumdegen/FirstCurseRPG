@@ -1,6 +1,7 @@
 package com.mygdx.game.GUI;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 public class DialogController {
 
 	private BitmapFont font;
+	Sound speechSound;
 	
 	public DialogController()
 	{
@@ -22,7 +24,7 @@ public class DialogController {
         spriteBatch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         
-       
+       speechSound = Gdx.audio.newSound(Gdx.files.internal("sounds/typing.wav"));
 	}
 		
 	String text = "";	
@@ -40,11 +42,13 @@ public class DialogController {
 		
 			lerpTotal = lerp * text.length();
 			lerpCounter = 0;
+			lastCharCount=0;
 		
 			nextText = text;
 		}
 	}
 	
+	int lastCharCount = 0;
 	public void update(float delta)
 	{
 		if(lerpTotal > 0)
@@ -55,6 +59,12 @@ public class DialogController {
 				float amt = (lerpCounter/lerpTotal);
 				 
 				int charCount = (int) (nextText.length() * amt);
+				if(charCount > lastCharCount)
+				{
+					lastCharCount = charCount;
+					speechSound.play(0.5f);
+				}
+				
 				
 				text = nextText.substring(0, charCount);
 				
@@ -86,6 +96,12 @@ public class DialogController {
 		 spriteBatch.end();
 		 
 		 
+		
+	}
+	public void queueDialogAction(DialogInfo info) {
+		
+		//actually make a queue? 
+		setText(info.speech, info.speed);
 		
 	}
 	

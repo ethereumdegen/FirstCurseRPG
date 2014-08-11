@@ -13,7 +13,7 @@ public class DialogInfo {
 	UnitType unittype; //displays icon
 	String name;
 	String speech;
-	float speed;
+	float speed = 0.05f;
 	
 	
 	

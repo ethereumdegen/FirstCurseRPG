@@ -232,5 +232,11 @@
    </properties>
   </object>
   <object name="PlayerStart" x="316" y="1464" width="26" height="32"/>
+  <object name="dungeon" x="256" y="1202">
+   <properties>
+    <property name="tint" value="1111BB"/>
+   </properties>
+   <polygon points="0,0 73,-47 176,-10 245,70 -117,58"/>
+  </object>
  </objectgroup>
 </map>

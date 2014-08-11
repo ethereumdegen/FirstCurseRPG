@@ -93,12 +93,12 @@ public class CameraManager {
 		
 		if(currentCommand instanceof PanCameraCommand)
 		{
-			Vector2 regionCenter = new Vector2(0,0);
+			
 			
 			MapRegion region = GameScreen.getWorld().getRegionByName(((PanCameraCommand) currentCommand).focusRegion);
 			
 			if(region != null){
-			region.getRect().getCenter(regionCenter);
+				Vector2 regionCenter = region.getCenter();
 			
 		   nextPos.x = regionCenter.x/16;
 		   nextPos.y = regionCenter.y/16;

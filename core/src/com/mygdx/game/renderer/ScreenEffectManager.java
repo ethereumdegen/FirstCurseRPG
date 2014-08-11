@@ -79,8 +79,7 @@ public class ScreenEffectManager {
 				
 				if(!Float.isInfinite(lerp)){
 					currentColor.set(previousColor.cpy().lerp(nextColor, lerp));
-					System.out.println("color  " + currentColor );
-					System.out.println("lerp " + lerp);
+					
 				}
 			}
 			

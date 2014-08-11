@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
+import com.mygdx.game.AssetMGMT.MapRegion;
 import com.mygdx.game.GUI.DialogInfo;
 import com.mygdx.game.camera.CameraCommand;
 import com.mygdx.game.camera.PanCameraCommand;
+import com.mygdx.game.controller.Player;
 import com.mygdx.game.renderer.ScreenEffect;
 import com.mygdx.game.renderer.TintScreenEffect;
 import com.mygdx.game.screens.GameScreen;
@@ -19,19 +21,24 @@ import com.mygdx.game.story.triggers.TriggerType;
 public class Chapter1 extends StoryChapter{
 
 	
-	List<StoryPage> pages = new ArrayList<StoryPage>();  //have to happen in sequential order
+	List<StoryEvent> pages = new ArrayList<StoryEvent>();  //have to happen in sequential order
+	
+	
+	List<StoryEvent> asyncEvents = new ArrayList<StoryEvent>();
+	
 	
 	int nextPage = 0;
 	
 	Chapter1()
 	{
 		
-		addPage(new StoryPage(
+		addPage(new StoryEvent(
 				null,
 				null,
-				new ActionType[]{new QueueDialogAction(new DialogInfo("Where am I?")),
-						new CameraAction(new PanCameraCommand("playerstart", 2f)),
+				new ActionType[]{new QueueDialogAction(new DialogInfo("Ugh.. Where am I?")),
+						new CameraAction(new PanCameraCommand("playerstart", 0f)),
 						new ScreenEffectAction(new TintScreenEffect(Color.BLACK) ),
+						
 						new ScreenEffectAction(new TintScreenEffect(Color.CLEAR,4) )
 				
 				
@@ -39,49 +46,61 @@ public class Chapter1 extends StoryChapter{
 				) );
 		
 		
-		addPage(new StoryPage(
+		addPage(new StoryEvent(
 				new TriggerType[]{new EnterRegionTrigger("town")},
 				null,
-				new ActionType[]{new QueueDialogAction(new DialogInfo("this is a test"))}				
+				new ActionType[]{new QueueDialogAction(new DialogInfo("I have to find my way back home!"))}				
 				) );
 		
 		
 		
-		
+		//addAsyncEvent();
 		
 		
 	}
 
-	private void addPage(StoryPage storyPage) {
-		pages.add(storyPage);
+	private void addPage(StoryEvent storyEvent) {
+		pages.add(storyEvent);
+		
+	}
+	
+	private void addAsyncEvent(StoryEvent storyEvent) {
+		asyncEvents.add(storyEvent);
 		
 	}
 	
 	@Override
 	public void update(float delta)
 	{
-		if(canAdvancePage(pages.get(nextPage)))
+		if(pages.size() > nextPage && canAdvancePage(pages.get(nextPage)))
 		{
 			executePage( pages.get(nextPage) );
 			
 			System.out.println("TURNING TO PAGE" + nextPage);
-			
-			nextPage++;		
+			nextPage++;	
 			
 			
 		}
 		
 		
-		
+		for(StoryEvent event : asyncEvents)
+		{
+			if(canAdvancePage(event))
+			{
+				executePage( event );
+				
+			}
+			
+		}
 		
 	}
 
 	
 
-	private boolean canAdvancePage(StoryPage storyPage) {
+	private boolean canAdvancePage(StoryEvent storyEvent) {
 		
-		if(storyPage.getTriggers() != null){
-			for(TriggerType trig : storyPage.getTriggers())
+		if(storyEvent.getTriggers() != null){
+			for(TriggerType trig : storyEvent.getTriggers())
 			{
 				if(!triggerFulfilled(trig))
 				{
@@ -90,8 +109,8 @@ public class Chapter1 extends StoryChapter{
 			}
 		}
 		
-		if(storyPage.getConditions() != null){
-			for(ConditionType cond : storyPage.getConditions())
+		if(storyEvent.getConditions() != null){
+			for(ConditionType cond : storyEvent.getConditions())
 			{
 				if(!conditionFulfilled(cond))
 				{
@@ -103,8 +122,10 @@ public class Chapter1 extends StoryChapter{
 		return true;
 	}
 	
-	private void executePage(StoryPage storyPage) {
-		for(ActionType action : storyPage.getActions())
+	private void executePage(StoryEvent storyEvent) {
+		storyEvent.executionCount++; //hopefully this works!?
+		
+		for(ActionType action : storyEvent.getActions())
 		{
 			executeAction(action);
 		}			
@@ -113,6 +134,25 @@ public class Chapter1 extends StoryChapter{
 
 
 	private boolean triggerFulfilled(TriggerType trig) {
+		
+		if(trig instanceof EnterRegionTrigger)
+		{
+			if(Player.getFocus() != null)
+			{
+				
+				MapRegion region = GameScreen.getWorld().getRegionByName( (String) ((EnterRegionTrigger)trig).getValue() );
+				
+				
+				if(region.encapsulatesPoint(Player.getFocus().getPosition().cpy().scl(16)))
+				{
+					return true;
+					
+				}
+				
+				
+			}
+		}
+		
 		
 		return false;
 	}
@@ -137,8 +177,10 @@ public class Chapter1 extends StoryChapter{
 		{
 			System.out.println("STORY STARTING DIALOG");
 			
+			DialogInfo info = (DialogInfo) ((QueueDialogAction)action).getValue();
+			
 			//queue this up
-			GameScreen.getGUI().getDialogController().setText("Where am I?",0.05f);
+			GameScreen.getGUI().getDialogController().queueDialogAction(info);  
 			
 								
 		}	

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -64,6 +65,21 @@ public class World {
 			if(layer.getName().equals("regions")){
 				for(MapObject obj: layer.getObjects())
 				{
+					
+					if(obj instanceof PolygonMapObject)
+					{
+						PolygonMapObject poly = (PolygonMapObject) obj;
+						
+						Color tint = null;
+						
+						if( obj.getProperties().containsKey("tint"))
+						{
+							tint = Color.valueOf((String) obj.getProperties().get("tint"));
+						}
+						
+						regions.add(new MapRegion(obj.getName(),poly.getPolygon(),tint ));
+					
+					}
 					
 				if(obj instanceof RectangleMapObject){
 					RectangleMapObject rect = (RectangleMapObject) obj;

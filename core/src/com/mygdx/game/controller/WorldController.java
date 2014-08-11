@@ -66,10 +66,8 @@ public class WorldController {
 		}
 		
 		checkRegion();
+				
 		
-		
-		
-	
 	}
 
 
@@ -81,7 +79,7 @@ public class WorldController {
 			
 			for(MapRegion region: GameScreen.getWorld().getRegions())
 			{
-				if(region.getRect().contains(Player.getFocus().getPosition().cpy().scl(16)))
+				if(region.encapsulatesPoint(Player.getFocus().getPosition().cpy().scl(16)))
 				{
 					Player.setRegion(region);					
 				}	
