@@ -1,7 +1,10 @@
 package com.mygdx.game.AssetMGMT;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
 
 public class AssetCenter {
@@ -13,6 +16,12 @@ public class AssetCenter {
 	{
 	manager = new AssetManager();
 	manager.load("sheets/basicsheet.png", Texture.class);
+	
+	
+	manager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
+	manager.load("maps/untitled.tmx", TiledMap.class);
+	
+	
 	
 	manager.finishLoading();//lag until done
 	}

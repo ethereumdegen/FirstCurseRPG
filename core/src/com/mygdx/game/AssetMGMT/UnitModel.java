@@ -2,16 +2,37 @@ package com.mygdx.game.AssetMGMT;
 
 
 
-public class UnitModel {
+public enum UnitModel {
 
+	HUMAN(SpriteSheet.BASICSHEET,190);
 	
-	public static SpriteSheet sheet = SpriteSheet.BASICSHEET;
+
+	UnitModel(SpriteSheet sheet, int index)
+	{
+		this.sheet=sheet;
+		this.index=index;
+		
+	}	
 	
-	public static int index = 200;
+	public  SpriteSheet sheet = SpriteSheet.BASICSHEET;
+	
+	public  int index = 200;
+	
+	public int tilesPerRow = 10;
 	
 	public SpriteSheet getSheet() {
 		
 		return sheet;
+	}
+
+	public int getX() {
+		
+		return (index % tilesPerRow) * sheet.tilesize;
+	}
+	
+	public int getY() {
+		
+		return (index / tilesPerRow) * sheet.tilesize ;
 	}
 
 }

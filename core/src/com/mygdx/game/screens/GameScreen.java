@@ -29,7 +29,7 @@ public class GameScreen implements Screen, InputProcessor {
 	}
 
 	@Override
-	public void render(float delta) {
+	public void render(float delta) { 
 		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -68,28 +68,17 @@ public class GameScreen implements Screen, InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
-		if (keycode == Keys.LEFT)
-			controller.leftPressed();
-		if (keycode == Keys.RIGHT)
-			controller.rightPressed();
-		if (keycode == Keys.Z)
-			controller.jumpPressed();
-		if (keycode == Keys.X)
-			controller.firePressed();
-		return true;
+		
+		return controller.keyDown(keycode);
+		
+		
 	}
 
 	@Override
 	public boolean keyUp(int keycode) {
-		if (keycode == Keys.LEFT)
-			controller.leftReleased();
-		if (keycode == Keys.RIGHT)
-			controller.rightReleased();
-		if (keycode == Keys.Z)
-			controller.jumpReleased();
-		if (keycode == Keys.X)
-			controller.fireReleased();
-		return true;
+		return controller.keyUp(keycode);
+		
+		
 	}
 
 	@Override
@@ -103,10 +92,12 @@ public class GameScreen implements Screen, InputProcessor {
 		if (!Gdx.app.getType().equals(ApplicationType.Android))
 			return false;
 		if (x < width / 2 && y > height / 2) {
-			controller.leftPressed();
+			//controller.leftPressed();
+			controller.keyDown(Keys.LEFT);
 		}
 		if (x > width / 2 && y > height / 2) {
-			controller.rightPressed();
+			controller.keyDown(Keys.RIGHT);
+			//controller.rightPressed();
 		}
 		return true;
 	}
@@ -116,10 +107,10 @@ public class GameScreen implements Screen, InputProcessor {
 		if (!Gdx.app.getType().equals(ApplicationType.Android))
 			return false;
 		if (x < width / 2 && y > height / 2) {
-			controller.leftReleased();
+			controller.keyUp(Keys.LEFT);
 		}
 		if (x > width / 2 && y > height / 2) {
-			controller.rightReleased();
+			controller.keyUp(Keys.RIGHT);
 		}
 		return true;
 	}

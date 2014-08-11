@@ -11,10 +11,10 @@ import com.mygdx.game.AssetMGMT.UnitModel;
 
 public class Unit implements ApplicationListener{
 	
-	Vector2 dimensions = new Vector2(16,16);
-	Vector2 position = new Vector2(16,16);
-	Vector2 velocity;
-	Vector2 acceleration;
+	Vector2 dimensions = new Vector2(25,25);
+	Vector2 position = new Vector2(25,25);
+	Vector2 velocity = new Vector2(0,0) ;
+	Vector2 acceleration= new Vector2(0,0) ;
 	
 	
 	SpriteBatch batch;
@@ -23,7 +23,7 @@ public class Unit implements ApplicationListener{
 	public Unit(UnitModel model) {
 		this.model = model;
 		
-		frame = new TextureRegion(model.getSheet().getTexture());
+		frame = new TextureRegion(model.getSheet().getTexture(),model.getX(),model.getY(),model.getSheet().tilesize,model.getSheet().tilesize);
 		
 		
 	}
@@ -45,7 +45,7 @@ public class Unit implements ApplicationListener{
 
 	@Override
 	public void render() {
-		System.out.println("test");
+		
 		
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -74,7 +74,10 @@ public class Unit implements ApplicationListener{
 	}
 
 	public void update(float delta) {
-		// TODO Auto-generated method stub
+		
+		velocity.add(acceleration);
+		position.add(velocity);
+		
 		
 	}
 	public Vector2 getPosition() {
