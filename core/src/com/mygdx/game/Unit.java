@@ -11,10 +11,12 @@ import com.mygdx.game.AssetMGMT.UnitModel;
 
 public class Unit implements ApplicationListener{
 	
-	Vector2 dimensions = new Vector2(25,25);
+	Vector2 dimensions = new Vector2(1,1);
 	Vector2 position = new Vector2(25,25);
 	Vector2 velocity = new Vector2(0,0) ;
 	Vector2 acceleration= new Vector2(0,0) ;
+	
+	float movespeed = 0.1f;
 	
 	
 	SpriteBatch batch;
@@ -76,7 +78,7 @@ public class Unit implements ApplicationListener{
 	public void update(float delta) {
 		
 		velocity.add(acceleration);
-		position.add(velocity);
+		position.add(velocity.nor().scl(movespeed));
 		
 		
 	}

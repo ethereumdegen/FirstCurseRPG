@@ -15,6 +15,7 @@ import com.mygdx.game.Unit;
 import com.mygdx.game.AssetMGMT.AssetCenter;
 import com.mygdx.game.AssetMGMT.UnitModel;
 import com.mygdx.game.controller.Player;
+import com.mygdx.game.utility.TileCoordinate;
 
 
 
@@ -33,13 +34,55 @@ public class World {
 	}
 
 	private void initWorld() {
-		Player.setFocus(spawnUnit());
+		
 		
 		map = AssetCenter.getManager().get("maps/untitled.tmx");
 		
+		replaceMonsters();
 		
 	}
 	
+	
+	/** Loop through every tile and do special things to them if they have special properties*/
+	private void replaceMonsters() {
+		
+		for(MapLayer layer: map.getLayers())
+		{
+			TiledMapTileLayer tilelayer = (TiledMapTileLayer) layer;
+			
+				for(int x = 0 ; x < (Integer) map.getProperties().get("width"); x++){
+					for(int y = 0 ; y < (Integer) map.getProperties().get("height"); y++){
+						Cell cell = tilelayer.getCell(x,y);
+							if(cell!=null && cell.getTile().getProperties().containsKey("unittype"))
+							{
+								System.out.println("replaced monster" + x +"."+ y);
+								spawnUnit(new TileCoordinate(x,y));
+								tilelayer.setCell(x, y, null);//delete the tile
+								
+								
+							}
+							
+							if(cell!=null && cell.getTile().getProperties().containsKey("player"))
+							{
+								System.out.println("spawned player" + x +"."+ y);
+								Player.setFocus(spawnUnit(new TileCoordinate(x,y)));
+								tilelayer.setCell(x, y, null);//delete the tile
+								
+								
+							}
+						
+						
+					}
+				}
+				
+			
+			
+		}
+		
+	}
+
+	
+
 	public boolean tileHasCollision(int x, int y) //the collision property is contained in the layer
 	{
 		for(MapLayer layer: map.getLayers())
@@ -71,8 +114,15 @@ public class World {
 	}
 	
 
-	private Unit spawnUnit() {
+	private Unit spawnUnit(TileCoordinate tileCoordinate) {
+		
+		return spawnUnit(tileCoordinate.getPos());
+	}
+
+	
+	private Unit spawnUnit(Vector2 pos) {
 		Unit unit = new Unit(UnitModel.HUMAN);
+		unit.getPosition().set(pos);
 		units.add(unit);
 		System.out.println("SPAWNING ");
 		return unit;

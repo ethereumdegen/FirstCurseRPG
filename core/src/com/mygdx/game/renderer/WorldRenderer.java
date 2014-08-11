@@ -2,11 +2,14 @@ package com.mygdx.game.renderer;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Unit;
+import com.mygdx.game.controller.Player;
 import com.mygdx.game.entities.World;
 
 public class WorldRenderer {
@@ -72,17 +75,41 @@ public class WorldRenderer {
 	}
 	
 	
+	
+	float camCatchUpSpeed = 0.1f;
 	public void render() {  
 		
+		if(Player.getFocus() != null){
+			//this.cam.position.set(Player.getFocus().getPosition().x - Player.getFocus().getDimensions().x/(2*ppuX),  Player.getFocus().getPosition().y - Player.getFocus().getDimensions().y/(2*ppuY), 0);	
+			
+			//constrain cam about player
+			
+			Vector2 camvec = new Vector2(cam.position.x,cam.position.y);
+			
+		
+				Vector2 diff = Player.getFocus().getPosition().cpy().sub(camvec);
+					if(diff.len() > 2){
+				
+				camvec = camvec.add(diff.nor().scl(0.1f * diff.len()));	
+				
+				cam.position.x = camvec.x;
+				cam.position.y = camvec.y;
+			}
+			
+			this.cam.update();
+		}
 		
 		
 		maprenderer.setView(cam);
 		maprenderer.render();
 		
+		spriteBatch.setProjectionMatrix(cam.combined);
 		spriteBatch.begin();
 			//drawTiles();
 			drawUnits();
 		spriteBatch.end();
+		
+		
 		if (debug)
 			drawDebug();
 	}
@@ -101,10 +128,9 @@ public class WorldRenderer {
 		for(Unit unit: world.getUnits())
 		{
 			
+			spriteBatch.draw(unit.getFrame(),unit.getPosition().x , unit.getPosition().y, unit.getDimensions().x , unit.getDimensions().y );
+			System.out.println(  unit.getPosition() );
 			
-			
-			spriteBatch.draw(unit.getFrame(),unit.getPosition().x, unit.getPosition().y , unit.getDimensions().x / this.cam.zoom, unit.getDimensions().y / this.cam.zoom );
-		
 		
 			//spriteBatch.draw(unit.getFrame(),25,25,25,25); ///testing
 		}
