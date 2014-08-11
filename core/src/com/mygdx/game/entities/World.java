@@ -15,9 +15,11 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Unit;
 import com.mygdx.game.AssetMGMT.AssetCenter;
 import com.mygdx.game.AssetMGMT.MapRegion;
+import com.mygdx.game.AssetMGMT.MusicController;
 import com.mygdx.game.AssetMGMT.UnitModel;
 import com.mygdx.game.AssetMGMT.UnitType;
 import com.mygdx.game.controller.Player;
@@ -49,6 +51,9 @@ public class World {
 		loadRegions();
 		replaceMonsters();
 		
+		
+		MusicController.playMusic();
+		
 	}
 	
 	private void loadRegions()
@@ -63,9 +68,15 @@ public class World {
 				if(obj instanceof RectangleMapObject){
 					RectangleMapObject rect = (RectangleMapObject) obj;
 					
+					Color tint = null;
+					
+					if( obj.getProperties().containsKey("tint"))
+					{
+						tint = Color.valueOf((String) obj.getProperties().get("tint"));
+					}
+					
 					regions.add(
-						new MapRegion(obj.getName(),rect.getRectangle(),
-										Color.valueOf((String) obj.getProperties().get("tint")) ));
+						new MapRegion(obj.getName(),rect.getRectangle(),tint ));
 				}
 			
 				
@@ -194,6 +205,20 @@ public class World {
 
 	public List<MapRegion> getRegions() {
 		return regions;
+	}
+
+	public MapRegion getRegionByName(String focusRegion) {
+		
+		for(MapRegion region : regions)
+		{
+			
+			if(focusRegion.equalsIgnoreCase(region.getName()))
+				{
+					return region;		
+				}
+		}
+		
+		return null;
 	}
 
 	

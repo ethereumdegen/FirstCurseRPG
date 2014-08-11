@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Unit;
+import com.mygdx.game.camera.CameraManager;
 import com.mygdx.game.controller.Player;
 import com.mygdx.game.entities.World;
 import com.mygdx.game.utility.TransitionalColor;
@@ -25,6 +26,10 @@ public class WorldRenderer {
 
 	private OrthogonalTiledMapRenderer maprenderer;
 	
+	private CameraManager camManager;
+	
+
+
 	/** for debug rendering **/
 	ShapeRenderer debugRenderer = new ShapeRenderer();
 
@@ -56,7 +61,10 @@ public class WorldRenderer {
 	public WorldRenderer(World world, boolean debug) {
 		this.world = world;
 		this.cam = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
-				
+		camManager = new CameraManager(cam);
+		
+		
+		
 		cam.setToOrtho(false, 30, 20);
 		
 		
@@ -85,8 +93,9 @@ public class WorldRenderer {
 	public void update(float delta)
 	{
 		terrainColor.update(delta);
+		camManager.update(delta);
 		
-		
+		this.cam.update();
 	}
 	
 	
@@ -94,7 +103,7 @@ public class WorldRenderer {
 	public void render() {  
 		
 				
-		if(Player.getRegion() != null)
+		if(Player.getRegion() != null && Player.getRegion().getTint()!=null)
 		{			
 			terrainColor.set(Player.getRegion().getTint(),1.0f);
 			
@@ -103,31 +112,13 @@ public class WorldRenderer {
 			
 		}
 		
-		
-		if(Player.getFocus() != null){
-			//this.cam.position.set(Player.getFocus().getPosition().x - Player.getFocus().getDimensions().x/(2*ppuX),  Player.getFocus().getPosition().y - Player.getFocus().getDimensions().y/(2*ppuY), 0);	
-			
-			//constrain cam about player
-			
-			Vector2 camvec = new Vector2(cam.position.x,cam.position.y);
-			
-		
-				Vector2 diff = Player.getFocus().getPosition().cpy().sub(camvec);
-					if(diff.len() > 2){
-				
-				camvec = camvec.add(diff.nor().scl(0.05f * diff.len()));	
-				
-				cam.position.x = camvec.x;
-				cam.position.y = camvec.y;
-			}
-			
-			this.cam.update();
-		}
-		
+	
 		
 		maprenderer.setView(cam);
 		maprenderer.getSpriteBatch().setColor(terrainColor);
 		maprenderer.render();
+		
+		
 		
 		spriteBatch.setColor(unitColor);
 		spriteBatch.setProjectionMatrix(cam.combined);
@@ -135,6 +126,7 @@ public class WorldRenderer {
 			//drawTiles();
 			drawUnits();
 		spriteBatch.end();
+		
 		
 		
 		if (debug)
@@ -197,4 +189,9 @@ public class WorldRenderer {
 	public OrthographicCamera getCam() {
 		return cam;
 	}
+	
+	public CameraManager getCameraManager() {
+		return camManager;
+	}
+
 }

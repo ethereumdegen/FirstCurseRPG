@@ -8,23 +8,38 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.mygdx.game.Unit;
+import com.mygdx.game.controller.GUIController;
 import com.mygdx.game.controller.WorldController;
+import com.mygdx.game.entities.GUI;
 import com.mygdx.game.entities.World;
+import com.mygdx.game.renderer.GUIRenderer;
 import com.mygdx.game.renderer.WorldRenderer;
+import com.mygdx.game.story.StoryController;
 
 public class GameScreen implements Screen, InputProcessor {
 
 	private static World 			world;
+	private static GUI 				gui;
 	private static WorldRenderer 	renderer;
 	private static WorldController	controller;
+	private static GUIRenderer 		guirenderer;
+	private static GUIController 	guicontroller;
+	private static StoryController 	storycontroller;
 	
 	private int width, height;
 	
 	@Override
 	public void show() {
 		world = new World();
+		gui = new GUI();
 		renderer = new WorldRenderer(world, true);
+		guirenderer = new GUIRenderer(gui);
 		controller = new WorldController(world);
+		guicontroller = new GUIController(gui);
+		storycontroller = new StoryController();
+		
+		
 		Gdx.input.setInputProcessor(this);
 	}
 
@@ -32,9 +47,24 @@ public class GameScreen implements Screen, InputProcessor {
 	public void render(float delta) { 
 		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		
 
 		controller.update(delta);
+		guicontroller.update(delta);
+		storycontroller.update(delta);
+		
+		guirenderer.update(delta);
+		renderer.update(delta);
+		
 		renderer.render();
+		
+		Gdx.gl.glEnable(GL20.GL_BLEND); //allows the GUI to be transparent over the world
+	    Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		
+		guirenderer.render();
+	
+		 Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 	
 	@Override
@@ -147,6 +177,15 @@ public class GameScreen implements Screen, InputProcessor {
 	public static WorldRenderer getWorldRenderer()
 	{
 		return renderer;
+	}
+
+	public static GUIRenderer getGUIRenderer() {
+		return guirenderer;
+	}
+
+	public static GUI getGUI() {
+		
+		return gui;
 	}
 
 }

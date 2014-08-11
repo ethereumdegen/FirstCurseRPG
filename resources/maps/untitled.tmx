@@ -231,5 +231,6 @@
     <property name="tint" value="DDBBAA"/>
    </properties>
   </object>
+  <object name="PlayerStart" x="316" y="1464" width="26" height="32"/>
  </objectgroup>
 </map>

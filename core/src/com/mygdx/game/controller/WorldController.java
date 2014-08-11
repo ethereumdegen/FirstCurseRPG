@@ -68,8 +68,8 @@ public class WorldController {
 		checkRegion();
 		
 		
-		GameScreen.getWorldRenderer().update(delta);
 		
+	
 	}
 
 
