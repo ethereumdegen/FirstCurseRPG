@@ -11,6 +11,10 @@ public class TileCoordinate {
 		this.x=x;
 		this.y=y;
 	}
+	public TileCoordinate(Vector2 newpos) {
+		this.x=(int) newpos.x;
+		this.y=(int) newpos.y;
+	}
 	public int getX() {
 		return x;
 	}

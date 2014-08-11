@@ -1,5 +1,6 @@
 package com.mygdx.game.renderer;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Unit;
 import com.mygdx.game.controller.Player;
 import com.mygdx.game.entities.World;
+import com.mygdx.game.utility.TransitionalColor;
 
 public class WorldRenderer {
 
@@ -74,10 +76,33 @@ public class WorldRenderer {
 		
 	}
 	
+	static final Color DEFAULT_ENVIRONMENT_COLOR = new Color(0.5f, 1f, 0.8f, 1f);
+	
+	Color unitColor = new Color(1f, 1f, 1f, 1f);
+	
+	TransitionalColor terrainColor = new TransitionalColor(0.5f, 1f, 0.8f, 1f);	
+
+	public void update(float delta)
+	{
+		terrainColor.update(delta);
+		
+		
+	}
 	
 	
 	float camCatchUpSpeed = 0.1f;
 	public void render() {  
+		
+				
+		if(Player.getRegion() != null)
+		{			
+			terrainColor.set(Player.getRegion().getTint(),1.0f);
+			
+		}else{
+			terrainColor.set(DEFAULT_ENVIRONMENT_COLOR,1.0f);
+			
+		}
+		
 		
 		if(Player.getFocus() != null){
 			//this.cam.position.set(Player.getFocus().getPosition().x - Player.getFocus().getDimensions().x/(2*ppuX),  Player.getFocus().getPosition().y - Player.getFocus().getDimensions().y/(2*ppuY), 0);	
@@ -90,7 +115,7 @@ public class WorldRenderer {
 				Vector2 diff = Player.getFocus().getPosition().cpy().sub(camvec);
 					if(diff.len() > 2){
 				
-				camvec = camvec.add(diff.nor().scl(0.1f * diff.len()));	
+				camvec = camvec.add(diff.nor().scl(0.05f * diff.len()));	
 				
 				cam.position.x = camvec.x;
 				cam.position.y = camvec.y;
@@ -101,8 +126,10 @@ public class WorldRenderer {
 		
 		
 		maprenderer.setView(cam);
+		maprenderer.getSpriteBatch().setColor(terrainColor);
 		maprenderer.render();
 		
+		spriteBatch.setColor(unitColor);
 		spriteBatch.setProjectionMatrix(cam.combined);
 		spriteBatch.begin();
 			//drawTiles();
@@ -128,10 +155,12 @@ public class WorldRenderer {
 		for(Unit unit: world.getUnits())
 		{
 			
-			spriteBatch.draw(unit.getFrame(),unit.getPosition().x , unit.getPosition().y, unit.getDimensions().x , unit.getDimensions().y );
-			System.out.println(  unit.getPosition() );
+			//spriteBatch.draw(unit.getFrame(),unit.getPosition().x , unit.getPosition().y, unit.getDimensions().x , unit.getDimensions().y );
+			if(unit.getSprite()!=null){
+				unit.getSprite().draw(spriteBatch);
+				//System.out.println(  unit.getPosition() );
+			}
 			
-		
 			//spriteBatch.draw(unit.getFrame(),25,25,25,25); ///testing
 		}
 		
@@ -163,5 +192,9 @@ public class WorldRenderer {
 		debugRenderer.setColor(new Color(0, 1, 0, 1));
 		debugRenderer.rect(x1, y1, rect.width, rect.height);
 		debugRenderer.end();*/
+	}
+
+	public OrthographicCamera getCam() {
+		return cam;
 	}
 }

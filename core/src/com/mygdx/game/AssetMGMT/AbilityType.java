@@ -2,7 +2,7 @@ package com.mygdx.game.AssetMGMT;
 
 
 
-public enum UnitModel {
+public enum AbilityType {
 
 	HUMAN("human",SpriteSheet.BASICSHEET,190),
 	EYEMONSTER("eyemonster",SpriteSheet.BASICSHEET,216),
@@ -11,7 +11,7 @@ public enum UnitModel {
 	
 	;
 
-	UnitModel(String name,SpriteSheet sheet, int index)
+	AbilityType(String name,SpriteSheet sheet, int index)
 	{
 		this.name=name;
 		this.sheet=sheet;

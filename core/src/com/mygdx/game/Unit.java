@@ -4,10 +4,14 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.AssetMGMT.UnitModel;
+import com.mygdx.game.AssetMGMT.UnitType;
+import com.mygdx.game.screens.GameScreen;
+import com.mygdx.game.utility.TileCoordinate;
 
 public class Unit implements ApplicationListener{
 	
@@ -16,26 +20,37 @@ public class Unit implements ApplicationListener{
 	Vector2 velocity = new Vector2(0,0) ;
 	Vector2 acceleration= new Vector2(0,0) ;
 	
-	float movespeed = 0.1f;
+	float movespeed = 0.05f;
 	
 	
-	SpriteBatch batch;
-	Texture img;
+	Sprite sprite;
 	
-	public Unit(UnitModel model) {
-		this.model = model;
+	
+	public Unit(UnitType type) {
+		this.type = type;
 		
-		frame = new TextureRegion(model.getSheet().getTexture(),model.getX(),model.getY(),model.getSheet().tilesize,model.getSheet().tilesize);
+		texRegion = new TextureRegion(getModel().getSheet().getTexture(),getModel().getX(),getModel().getY(),getModel().getSheet().tilesize,getModel().getSheet().tilesize);
 		
+		sprite = new Sprite(texRegion);
+		sprite.setOrigin(0, 0);
+        sprite.setScale(1/16f);
+        sprite.setCenter(0.5f, 0.5f);
+         
+	}
+
+	UnitType type;
+	
+	
+	UnitModel getModel()
+	{
+		return type.getModel();
 		
 	}
 
-	UnitModel model;
-
 	@Override
 	public void create() {
-		batch = new SpriteBatch();
-		img = new Texture(model.getSheet().getFilePath());
+		
+		
 		
 	}
 
@@ -49,11 +64,7 @@ public class Unit implements ApplicationListener{
 	public void render() {
 		
 		
-		Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();// TODO Auto-generated method stub
+
 		
 	}
 
@@ -75,10 +86,49 @@ public class Unit implements ApplicationListener{
 		
 	}
 
+	float rotationangle = 0f;
+	float movementcounter = 0f;
+	
 	public void update(float delta) {
 		
 		velocity.add(acceleration);
-		position.add(velocity.nor().scl(movespeed));
+		
+		
+		
+		//only allow position to change in a direction if that way is unblocked!
+		//set up the new possible X arm
+		Vector2 newposX = position.cpy().add(velocity.nor().scl(movespeed));
+		newposX.y = position.y;
+		
+		//set up the new possible Y arm
+		Vector2 newposY = position.cpy().add(velocity.nor().scl(movespeed));
+		newposY.x = position.x;
+		
+		if(GameScreen.getWorld().tileHasCollision(new TileCoordinate(newposX.cpy().add(0.5f,0.5f) ) ) == false)
+		{
+			position.x = newposX.x;
+			
+		}
+		
+		if(GameScreen.getWorld().tileHasCollision(new TileCoordinate(newposY.cpy().add(0.5f,0.5f) ) ) == false)
+		{
+			position.y = newposY.y;
+			
+		}
+		
+		if(!velocity.isZero()){
+			movementcounter+= delta;
+			rotationangle = (float) Math.cos(movementcounter*10)*10;
+			
+		
+		}else{
+			movementcounter = 0f;
+			rotationangle = 0f;
+		}
+		
+		
+		sprite.setPosition(position.x, position.y);
+		sprite.setRotation(rotationangle);
 		
 		
 	}
@@ -104,15 +154,18 @@ public class Unit implements ApplicationListener{
 
 	
 
-	TextureRegion frame;
+	TextureRegion texRegion;
 	public TextureRegion getFrame() {
-		// TODO Auto-generated method stub
-		return frame;
+		return texRegion;
 	}
 
 	public Vector2 getDimensions() {
-		// TODO Auto-generated method stub
 		return dimensions;
+	}
+
+	public Sprite getSprite() {
+		
+		return sprite;
 	}
 
 	

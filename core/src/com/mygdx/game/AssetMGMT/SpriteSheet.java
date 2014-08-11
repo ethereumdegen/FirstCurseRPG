@@ -10,7 +10,7 @@ public enum SpriteSheet {
 	
 		public  String filepath = "";
 		public  int tilesize = 16;
-	
+		public int tilesPerRow = 10;
 	
 	SpriteSheet(String filepath, int tilesize){		
 		

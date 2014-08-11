@@ -14,9 +14,9 @@ import com.mygdx.game.renderer.WorldRenderer;
 
 public class GameScreen implements Screen, InputProcessor {
 
-	private World 			world;
-	private WorldRenderer 	renderer;
-	private WorldController	controller;
+	private static World 			world;
+	private static WorldRenderer 	renderer;
+	private static WorldController	controller;
 	
 	private int width, height;
 	
@@ -139,5 +139,14 @@ public class GameScreen implements Screen, InputProcessor {
 		return false;
 	}
 	
+	
+	public static World getWorld()
+	{
+		return world;
+	}
+	public static WorldRenderer getWorldRenderer()
+	{
+		return renderer;
+	}
 
 }

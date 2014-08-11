@@ -1,20 +1,27 @@
 package com.mygdx.game.entities;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Unit;
 import com.mygdx.game.AssetMGMT.AssetCenter;
+import com.mygdx.game.AssetMGMT.MapRegion;
 import com.mygdx.game.AssetMGMT.UnitModel;
+import com.mygdx.game.AssetMGMT.UnitType;
 import com.mygdx.game.controller.Player;
+import com.mygdx.game.screens.GameScreen;
 import com.mygdx.game.utility.TileCoordinate;
 
 
@@ -25,6 +32,7 @@ public class World {
 	//List<TerrainTile> tiles = new ArrayList<TerrainTile>();
 	
 	List<Unit> units = new ArrayList<Unit>();
+	List<MapRegion> regions = new ArrayList<MapRegion>();
 	
 	TiledMap map;
 
@@ -38,7 +46,33 @@ public class World {
 		
 		map = AssetCenter.getManager().get("maps/untitled.tmx");
 		
+		loadRegions();
 		replaceMonsters();
+		
+	}
+	
+	private void loadRegions()
+	{
+		
+		for(MapLayer layer : map.getLayers())
+		{
+			if(layer.getName().equals("regions")){
+				for(MapObject obj: layer.getObjects())
+				{
+					
+				if(obj instanceof RectangleMapObject){
+					RectangleMapObject rect = (RectangleMapObject) obj;
+					
+					regions.add(
+						new MapRegion(obj.getName(),rect.getRectangle(),
+										Color.valueOf((String) obj.getProperties().get("tint")) ));
+				}
+			
+				
+				}
+			}
+			
+		}
 		
 	}
 	
@@ -48,40 +82,45 @@ public class World {
 		
 		for(MapLayer layer: map.getLayers())
 		{
+			if(layer instanceof TiledMapTileLayer){
 			TiledMapTileLayer tilelayer = (TiledMapTileLayer) layer;
 			
 				for(int x = 0 ; x < (Integer) map.getProperties().get("width"); x++){
 					for(int y = 0 ; y < (Integer) map.getProperties().get("height"); y++){
 						Cell cell = tilelayer.getCell(x,y);
-							if(cell!=null && cell.getTile().getProperties().containsKey("unittype"))
-							{
-								System.out.println("replaced monster" + x +"."+ y);
-								spawnUnit(new TileCoordinate(x,y));
-								tilelayer.setCell(x, y, null);//delete the tile
-								
-								
-							}
 							
-							if(cell!=null && cell.getTile().getProperties().containsKey("player"))
+							
+							if(cell!=null && cell.getTile().getProperties().containsKey("player") && cell.getTile().getProperties().containsKey("unittype"))
 							{
 								System.out.println("spawned player" + x +"."+ y);
-								Player.setFocus(spawnUnit(new TileCoordinate(x,y)));
+								UnitType type = UnitType.getFromString((String) cell.getTile().getProperties().get("unittype"));
+								Player.setFocus(spawnUnit(type,new TileCoordinate(x,y)));
+								tilelayer.setCell(x, y, null);//delete the tile
+								
+								
+							}else if(cell!=null && cell.getTile().getProperties().containsKey("unittype"))
+							{
+								System.out.println("replaced monster" + x +"."+ y);
+								UnitType type = UnitType.getFromString((String) cell.getTile().getProperties().get("unittype"));
+								spawnUnit(type,new TileCoordinate(x,y));
 								tilelayer.setCell(x, y, null);//delete the tile
 								
 								
 							}
-						
-						
 					}
 				}
 				
-			
+			}
 			
 		}
 		
 	}
 
 	
+	public boolean tileHasCollision(TileCoordinate coord) {
+		
+		return tileHasCollision(coord.getX(),coord.getY());
+	}
 
 	public boolean tileHasCollision(int x, int y) //the collision property is contained in the layer
 	{
@@ -114,14 +153,14 @@ public class World {
 	}
 	
 
-	private Unit spawnUnit(TileCoordinate tileCoordinate) {
+	private Unit spawnUnit(UnitType type, TileCoordinate tileCoordinate) {
 		
-		return spawnUnit(tileCoordinate.getPos());
+		return spawnUnit(type, tileCoordinate.getPos());
 	}
 
 	
-	private Unit spawnUnit(Vector2 pos) {
-		Unit unit = new Unit(UnitModel.HUMAN);
+	private Unit spawnUnit(UnitType type,Vector2 pos) {
+		Unit unit = new Unit(type);
 		unit.getPosition().set(pos);
 		units.add(unit);
 		System.out.println("SPAWNING ");
@@ -152,4 +191,10 @@ public class World {
 		
 		return units;
 	}
+
+	public List<MapRegion> getRegions() {
+		return regions;
+	}
+
+	
 }

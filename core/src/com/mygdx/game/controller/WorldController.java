@@ -5,9 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
 import com.mygdx.game.Unit;
 import com.mygdx.game.UnitState;
+import com.mygdx.game.AssetMGMT.MapRegion;
 import com.mygdx.game.entities.World;
+import com.mygdx.game.screens.GameScreen;
 
 
 public class WorldController {
@@ -46,6 +50,8 @@ public class WorldController {
 	public WorldController(World world) {
 		this.world = world;
 		
+	//	GameScreen.getWorldRenderer().getCam().lookAt(Player.getFocus().getPosition().x, Player.getFocus().getPosition().y, 0);
+		
 	}
 
 	
@@ -57,6 +63,31 @@ public class WorldController {
 		for(Unit unit : world.getUnits())
 		{
 			unit.update(delta);
+		}
+		
+		checkRegion();
+		
+		
+		GameScreen.getWorldRenderer().update(delta);
+		
+	}
+
+
+	
+	private void checkRegion() {
+		if(Player.getFocus() != null)
+		{
+			Player.setRegion(null);
+			
+			for(MapRegion region: GameScreen.getWorld().getRegions())
+			{
+				if(region.getRect().contains(Player.getFocus().getPosition().cpy().scl(16)))
+				{
+					Player.setRegion(region);					
+				}	
+			}
+			
+			
 		}
 		
 	}
