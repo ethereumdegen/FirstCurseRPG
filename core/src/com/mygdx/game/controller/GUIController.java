@@ -8,6 +8,8 @@ public class GUIController {
 	
 	GUI gui;
 	
+	
+	
 	public GUIController(GUI gui) {
 		this.gui=gui;
 	}
@@ -17,9 +19,32 @@ public class GUIController {
 		
 	}
 
+	public boolean keyDown(int keycode) {
+		if(GUIFocused()){
+			GameScreen.getGUI().getDialogController().next();
+			
+			return true;
+		}
+		
+		
+		return false;
+	}
+
+	
+
+	public boolean keyUp(int keycode) {
+		
+		
+		return false;
+	}
 	
 	
 	
+	public boolean GUIFocused()
+	{
+		return GameScreen.getGUI().getDialogController().getDialogIsActive();
+		
+	}
 	
 	
 }

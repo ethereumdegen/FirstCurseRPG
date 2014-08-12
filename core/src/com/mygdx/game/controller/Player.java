@@ -9,6 +9,8 @@ public class Player {
 	static Unit focus;
 	static MapRegion region;
 	
+	static boolean cinematicMode = false;
+	
 	public static void setFocus(Unit unit)
 	{
 		focus = unit;	
@@ -28,6 +30,11 @@ public class Player {
 	public static MapRegion getRegion() {
 	
 		return region;
+	}
+
+	public static boolean cinematicMode() {
+		
+		return cinematicMode;
 	}
 	
 }

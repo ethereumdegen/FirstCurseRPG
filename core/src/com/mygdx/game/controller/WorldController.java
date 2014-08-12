@@ -23,7 +23,6 @@ public class WorldController {
 	private World 	world;
 	
 	
-	
 	Player player;
 	
 	
@@ -65,14 +64,32 @@ public class WorldController {
 			unit.update(delta);
 		}
 		
-		checkRegion();
+		updatePlayerRegion();
 				
+		checkEnemyDistanceFromPlayer();
+	}
+
 		
+	
+	private void checkEnemyDistanceFromPlayer() {
+		if(Player.getFocus() != null)
+		{
+			for(Unit unit : world.getUnits())
+			{
+				
+				if(unit!=Player.getFocus() && Player.getFocus().getPosition().dst(unit.getPosition()) < 1)
+				{
+					System.out.println("start Battle!");
+					//need to code the battle screen!
+				}
+				
+			}
+		}
 	}
 
 
-	
-	private void checkRegion() {
+
+	private void updatePlayerRegion() {
 		if(Player.getFocus() != null)
 		{
 			Player.setRegion(null);
@@ -95,7 +112,7 @@ public class WorldController {
 	/** Change Bob's state and parameters based on input controls **/
 	private void processActions() {
 		
-		if(Player.getFocus() != null ){
+		if(Player.getFocus() != null && !Player.cinematicMode() ){
 			Player.getFocus().setState(UnitState.IDLE);
 			// acceleration is 0 on the x
 			Player.getFocus().getAcceleration().setZero();
@@ -120,6 +137,9 @@ public class WorldController {
 			
 		}
 			
+			
+		
+		
 		
 		
 		}

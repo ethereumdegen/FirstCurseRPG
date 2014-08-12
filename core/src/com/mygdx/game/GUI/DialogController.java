@@ -1,5 +1,8 @@
 package com.mygdx.game.GUI;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -7,12 +10,16 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.mygdx.game.camera.CameraCommand;
 
 
 public class DialogController {
 
 	private BitmapFont font;
 	Sound speechSound;
+	
+	List<DialogInfo> queuedInfo = new ArrayList<DialogInfo>();
+	
 	
 	public DialogController()
 	{
@@ -84,7 +91,8 @@ public class DialogController {
 	SpriteBatch spriteBatch;
 	ShapeRenderer shapeRenderer;
 	public void render() {
-		
+		if(dialogIsActive)
+		{
 		shapeRenderer.setColor(0.3f,0.3f,0.3f,1f);
 		 shapeRenderer.begin(ShapeType.Filled);
 		 shapeRenderer.rect(0, 0, Gdx.graphics.getWidth(), 100);
@@ -94,14 +102,54 @@ public class DialogController {
 		 spriteBatch.begin();
 		 font.drawWrapped(spriteBatch, text, 140, 90, 300);
 		 spriteBatch.end();
-		 
+		}
 		 
 		
 	}
 	public void queueDialogAction(DialogInfo info) {
 		
-		//actually make a queue? 
-		setText(info.speech, info.speed);
+		queuedInfo.add(info);
+		
+		if(!dialogIsActive)
+		{
+			next();
+		}
+		
+	}
+	
+	
+	
+	boolean dialogIsActive = false;
+	
+	public boolean getDialogIsActive() {
+		
+		return dialogIsActive;
+	}
+	
+	public void next() {
+		
+		if(lerpCounter < lerpTotal)
+		{
+			return; //wait until text is done...
+		}
+		
+		if(queuedInfo.isEmpty())
+		{
+			dialogIsActive = false;
+			
+		}
+		else
+		{			
+		
+		dialogIsActive = true;
+		
+		DialogInfo nextInfo = queuedInfo.remove(0);
+		
+		setText(nextInfo.speech, nextInfo.speed);
+		
+		}
+		
+		
 		
 	}
 	

@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.AssetMGMT.UnitModel;
 import com.mygdx.game.AssetMGMT.UnitType;
+import com.mygdx.game.controller.Player;
 import com.mygdx.game.screens.GameScreen;
 import com.mygdx.game.utility.TileCoordinate;
 
@@ -22,7 +24,7 @@ public class Unit implements ApplicationListener{
 	
 	float movespeed = 0.05f;
 	
-	
+	Sound stepSound;
 	Sprite sprite;
 	
 	
@@ -35,7 +37,8 @@ public class Unit implements ApplicationListener{
 		sprite.setOrigin(0, 0);
         sprite.setScale(1/16f);
         sprite.setCenter(0.5f, 0.5f);
-         
+        
+        stepSound = Gdx.audio.newSound(Gdx.files.internal("sounds/grasswalk.wav"));
 	}
 
 	UnitType type;
@@ -89,6 +92,8 @@ public class Unit implements ApplicationListener{
 	float rotationangle = 0f;
 	float movementcounter = 0f;
 	
+	int stepsoundcounter = 0;
+	
 	public void update(float delta) {
 		
 		velocity.add(acceleration);
@@ -120,10 +125,17 @@ public class Unit implements ApplicationListener{
 			movementcounter+= delta;
 			rotationangle = (float) Math.cos(movementcounter*10)*10;
 			
+			if(stepsoundcounter < movementcounter * 3)
+			{
+				stepsoundcounter++;
+				float stepVol = (40 - position.dst(Player.getFocus().position)) / 100;			
+				stepSound.play(stepVol);
+			}
 		
 		}else{
 			movementcounter = 0f;
 			rotationangle = 0f;
+			stepsoundcounter = 0;
 		}
 		
 		

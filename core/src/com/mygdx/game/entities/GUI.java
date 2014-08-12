@@ -6,6 +6,8 @@ public class GUI {
 
 	DialogController dialogController;
 	
+	
+	
 	public GUI()
 	{
 		dialogController = new DialogController();
