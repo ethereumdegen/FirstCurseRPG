@@ -47,6 +47,7 @@ public class BattleInterfaceController implements InputHandler,BattleOptionListe
 		
 		rightNode.attachChild(targetSelectScreen);
 		centerNode.attachChild(unitActionScreen);
+		centerNode.detachChild(unitAttacksScreen);
 		leftNode.attachChild(partyInfoScreen);
 		
 		font = new BitmapFont();
@@ -65,6 +66,10 @@ public class BattleInterfaceController implements InputHandler,BattleOptionListe
 	
 	public void initBattle()
 	{
+		
+		
+		
+		
 		unitActionScreen.setActive(true);
 		
 	}
@@ -169,14 +174,19 @@ public class BattleInterfaceController implements InputHandler,BattleOptionListe
 		
 			partyInfoScreen.processInputAction(action,asserted);
 			
-			if(GUINode.hasDescendant(unitActionScreen))
+			if(GUINode.hasDescendant(unitActionScreen) && unitActionScreen.isActive())
 			{
 			unitActionScreen.processInputAction(action,asserted);
+		
 			}
-						
-			if(GUINode.hasDescendant(unitAttacksScreen))
+			else if(GUINode.hasDescendant(unitAttacksScreen) && unitAttacksScreen.isActive())
 			{
 			unitAttacksScreen.processInputAction(action,asserted);
+			
+			}
+			else if(GUINode.hasDescendant(targetSelectScreen) && targetSelectScreen.isActive())
+			{
+				targetSelectScreen.processInputAction(action,asserted);
 			}
 		
 		return false;
@@ -193,13 +203,12 @@ public class BattleInterfaceController implements InputHandler,BattleOptionListe
 			UnitActions action = (UnitActions) option;
 			switch(action)
 			{
-			case ATTACK: showAttackScreen(); break;	
-			
+			case ATTACK: showAttackScreen(); break;				
+			case CHOOSETARGET: showTargetScreen(); break;
+			case EXECUTEABILITY: assertUnitAbility(); break;
 			}
 			
-			
-			
-			
+						
 		}
 		
 		
@@ -207,13 +216,53 @@ public class BattleInterfaceController implements InputHandler,BattleOptionListe
 
 
 	
-
-	
-	private void showAttackScreen() {
+	private void assertUnitAbility() {
+		System.out.println("executing ability!");
 		
-		centerNode.detachAllChildren();
+		if(GUINode.hasDescendant(unitAttacksScreen))
+		{
+			int casterIndex = 0;
+			int attackTypeIndex = unitAttacksScreen.getSelectionIndex();
+			int victimIndex = targetSelectScreen.getSelectionIndex();
+			
+			System.out.println(attackTypeIndex +":" + victimIndex);
+			GameScreen.getBattle().executeUnitAbility();
+		}
+		
+		
+		centerNode.detachChild(unitAttacksScreen);
+		
+		targetSelectScreen.setActive(false);
+		unitAttacksScreen.setActive(false);
+		unitActionScreen.setActive(false);
+		
+		checkForCooledDownPartyMembers();
+	}
+
+
+	private void checkForCooledDownPartyMembers() {
+		
+		
+		//if a member is ready...
+	//	unitActionScreen.setActive(true);
+		//centerNode.attachChild(unitActionScreen);
+	}
+
+
+	private void showTargetScreen() {
+		
+		unitActionScreen.setActive(false);
+		unitAttacksScreen.setActive(false);
+		targetSelectScreen.setActive(true);
+	}
+
+
+	private void showAttackScreen() {
+				
+		centerNode.detachChild(unitActionScreen);
 		centerNode.attachChild(unitAttacksScreen);
 		
+		unitActionScreen.setActive(false);
 		unitAttacksScreen.setActive(true);
 	}
 

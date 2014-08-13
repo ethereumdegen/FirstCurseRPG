@@ -2,17 +2,9 @@ package com.mygdx.game.screens;
 
 
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.mygdx.game.Unit;
 import com.mygdx.game.audio.MusicController;
 import com.mygdx.game.controller.GUIController;
 import com.mygdx.game.controller.InputActionManager;
@@ -34,6 +26,7 @@ public class GameScreen implements Screen {
 	private static BattleRenderer   battleRenderer;
 	private static WorldRenderer 	worldRenderer;
 	private static WorldController	controller;
+	
 	private static GUIRenderer 		guirenderer;
 	private static GUIController 	guicontroller;
 	private static StoryController 	storycontroller;

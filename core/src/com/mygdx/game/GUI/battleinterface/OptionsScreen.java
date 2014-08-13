@@ -3,6 +3,8 @@ package com.mygdx.game.GUI.battleinterface;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mygdx.game.AssetMGMT.UtilitySprites;
 import com.mygdx.game.controller.InputActionManager.InputAction;
@@ -16,6 +18,7 @@ public class OptionsScreen extends Node2D implements InputHandler{
 	
 	protected GraphSprite arrow;
 	
+	Sound selectSound;
 	
 	int optionOffset = 0;
 	
@@ -23,7 +26,7 @@ public class OptionsScreen extends Node2D implements InputHandler{
 	
 	
 
-	String[] options = new String[]{"---","---","---"};
+	String[] options = new String[3];
 	
 	
 	OptionsScreen()
@@ -39,6 +42,8 @@ public class OptionsScreen extends Node2D implements InputHandler{
 			}
 		
 		
+		selectSound = Gdx.audio.newSound(Gdx.files.internal("sounds/typing.wav"));
+			 
 						
 		TextureRegion tex= UtilitySprites.SELECTIONSQUARE.getTextureRegion();
 		arrow = new GraphSprite(tex);
@@ -53,7 +58,14 @@ public class OptionsScreen extends Node2D implements InputHandler{
 		
 		
 		for(int i=0;i<optionLabels.length;i++){
-			optionLabels[i].setText(options[i+optionOffset]);
+			if(options[i+optionOffset] != null){
+				optionLabels[i].setText(options[i+optionOffset]);
+			}else{
+				optionLabels[i].setText("---");
+			}
+			
+			//optionLabels[i].setActive(this.isActive());
+			
 		}
 		
 		if(isActive())
@@ -119,10 +131,15 @@ public class OptionsScreen extends Node2D implements InputHandler{
 		
 		
 		if(selectionIndex < 2){
-			selectionIndex++;
+			if(options[selectionIndex + optionOffset + 1] != null){
+				selectionIndex++;
+				selectSound.play();
+			}
 		}else{
 			if(selectionIndex + optionOffset < (options.length-1)){
 				optionOffset++;
+				selectSound.play();
+				
 			}
 		}
 		
@@ -133,9 +150,12 @@ public class OptionsScreen extends Node2D implements InputHandler{
 		
 		if(selectionIndex > 0){
 			selectionIndex--;
+			selectSound.play();
+			
 		}else{
 			if( optionOffset > 0){
 				optionOffset--;
+				selectSound.play();
 			}
 		}
 		
@@ -146,7 +166,7 @@ public class OptionsScreen extends Node2D implements InputHandler{
 	
 
 	protected void selectAction() {
-		System.out.println("doing action " + selectionIndex );
+		
 		
 	}
 
@@ -172,6 +192,10 @@ public class OptionsScreen extends Node2D implements InputHandler{
 		return active;
 	}
 
+
+	public int getSelectionIndex() {
+		return selectionIndex;
+	}
 
 
 

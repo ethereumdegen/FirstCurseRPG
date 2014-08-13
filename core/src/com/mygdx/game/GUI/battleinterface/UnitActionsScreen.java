@@ -9,7 +9,9 @@ public class UnitActionsScreen extends OptionsScreen implements InputHandler{
 		ATTACK,
 		POWERS,
 		ITEMS,
-		RUN
+		RUN, 
+		CHOOSETARGET, 
+		EXECUTEABILITY
 		
 	}
 	
@@ -63,6 +65,8 @@ public class UnitActionsScreen extends OptionsScreen implements InputHandler{
 		
 		
 	}
+
+
 
 
 

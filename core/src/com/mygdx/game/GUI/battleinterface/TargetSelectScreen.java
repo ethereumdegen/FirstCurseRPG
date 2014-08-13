@@ -10,12 +10,7 @@ public class TargetSelectScreen extends OptionsScreen implements InputHandler{
 	{			
 		super();
 		
-		for(int i = 0; i < 3 ;i++)
-		{
-			if(GameScreen.getBattle().getUnits()[1][i]!=null){
-				options[i] = GameScreen.getBattle().getUnits()[1][i].getName();
-			}
-		}
+	
 		
 		
 				
@@ -37,27 +32,23 @@ public class TargetSelectScreen extends OptionsScreen implements InputHandler{
 	{ 
 		super.update(delta);
 		
-				
-		
+		for(int i = 0; i < 3 ;i++)
+		{
+			if(GameScreen.getBattle().getUnits()[1][i]!=null){
+				options[i] = GameScreen.getBattle().getUnits()[1][i].getName();
+			}
+		}
+	
 	}
 	
 	
 	@Override
 	protected void selectAction() {
-		
-		switch(selectionIndex)
-		{
-		case 0: broadcastBattleOption(UnitActions.ATTACK);
-		break;
-		case 1: broadcastBattleOption(UnitActions.ITEMS);
-		break;
-		case 2: broadcastBattleOption(UnitActions.POWERS);
-		break;
-		case 3: broadcastBattleOption(UnitActions.RUN);
-		break;		
-		}
+		//set ability.... whatever
 		
 		
+		
+		broadcastBattleOption(UnitActions.EXECUTEABILITY);
 		
 	}
 

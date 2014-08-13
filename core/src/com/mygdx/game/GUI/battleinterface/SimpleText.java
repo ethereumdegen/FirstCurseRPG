@@ -11,6 +11,7 @@ public class SimpleText extends Spatial{
 	
 	SpriteBatch spriteBatch;
 
+	boolean active = true;
 	
 	public String getText() {
 		return text;
@@ -39,11 +40,19 @@ public class SimpleText extends Spatial{
 	
 	@Override
 	public void render() {
-		
+		if(active){
 		
 		spriteBatch.begin();
 		font.draw(spriteBatch, text, this.getWorldTranslation().x, this.getWorldTranslation().y);	
 		spriteBatch.end();
+		
+		}
+	}
+
+	
+	
+	public void setActive(boolean active) {
+		this.active=active;
 	}
 
 	

@@ -116,5 +116,9 @@ public class Node2D extends Spatial{
 		return children.contains(spatial);
 	}
 
+	public void detachChild(Spatial spatial) {
+		children.remove(spatial);
+	}
+
 	
 }

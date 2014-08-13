@@ -22,6 +22,7 @@ import com.mygdx.game.AssetMGMT.AssetCenter;
 import com.mygdx.game.AssetMGMT.MapRegion;
 import com.mygdx.game.AssetMGMT.UnitModel;
 import com.mygdx.game.AssetMGMT.UnitType;
+import com.mygdx.game.abilities.AbilityType;
 import com.mygdx.game.audio.MusicController;
 import com.mygdx.game.audio.MusicalEmotion;
 import com.mygdx.game.controller.Player;
@@ -176,7 +177,14 @@ public class Battle {
 	}
 
 
+	public void executeUnitAbility() {
+		AbilityType type = AbilityType.SLASH;
 	
+		
+	}
+
+	public void executeAbilityEffect() {
+	}
 
 	
 }

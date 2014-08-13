@@ -1,5 +1,6 @@
 package com.mygdx.game.GUI.battleinterface;
 
+import com.mygdx.game.GUI.battleinterface.UnitActionsScreen.UnitActions;
 import com.mygdx.game.controller.InputActionManager.InputAction;
 
 public class UnitAttacksScreen extends OptionsScreen implements InputHandler{
@@ -11,11 +12,16 @@ public class UnitAttacksScreen extends OptionsScreen implements InputHandler{
 	{			
 		super();
 		
-		options = new String[]{"Slash","---","---","---"};
-		
-		
+	
 	}
 
+	@Override
+	public void update(float delta)
+	{
+		super.update(delta);
+		options[0] = "Slash";
+	}
+	
 	
 
 	@Override
@@ -30,9 +36,11 @@ public class UnitAttacksScreen extends OptionsScreen implements InputHandler{
 
 	@Override
 	protected void selectAction() {
-		System.out.println("doing action " + selectionIndex );
+		broadcastBattleOption(UnitActions.CHOOSETARGET);
 		
 	}
+	
+	
 
 	
 	

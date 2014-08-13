@@ -35,6 +35,11 @@ public enum UnitType {
 		}
 		return null;
 	}
+
+	public String getName() {
+		
+		return name;
+	}
 	
 	
 	

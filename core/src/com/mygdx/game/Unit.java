@@ -213,10 +213,22 @@ public class Unit implements ApplicationListener{
 		battleSpot = spot;
 	}
 	
-	String name = "no name";
+	String name = null;
 
 	public String getName() {
+		
+		if(name==null)
+		{
+			return getUnitType().getName();
+		}
+		
+		
 		return name;
+	}
+
+	private UnitType getUnitType() {
+		
+		return type;
 	}
 
 	public int getStatValue(UnitStats stat) {
