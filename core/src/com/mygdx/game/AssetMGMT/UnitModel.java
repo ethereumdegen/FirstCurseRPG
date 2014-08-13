@@ -1,5 +1,8 @@
 package com.mygdx.game.AssetMGMT;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
+
 
 
 public enum UnitModel {
@@ -7,6 +10,7 @@ public enum UnitModel {
 	HUMAN("human",SpriteSheet.BASICSHEET,190),
 	EYEMONSTER("eyemonster",SpriteSheet.BASICSHEET,216),
 	MOUSE("mouse",SpriteSheet.BASICSHEET,210),
+	
 	
 	
 	;
@@ -17,7 +21,22 @@ public enum UnitModel {
 		this.sheet=sheet;
 		this.index=index;
 		
+		texRegion = new TextureRegion(sheet.getTexture(),getX(),getY(),getSheet().tilesize,getSheet().tilesize);
+		
 	}	
+	
+	UnitModel(String name,SpriteSheet sheet, String elementId)
+	{
+		this.name=name;
+		this.sheet=sheet;
+		
+		Rectangle rect = sheet.getElementRectFromXML(elementId);
+		
+		texRegion = new TextureRegion(sheet.getTexture(),rect.x,rect.y,rect.width,rect.height);
+		
+	}	
+	
+	
 	public String name = "";
 	
 	public  SpriteSheet sheet = SpriteSheet.BASICSHEET;
@@ -39,6 +58,13 @@ public enum UnitModel {
 	public int getY() {
 		
 		return (index / sheet.tilesPerRow) * sheet.tilesize ;
+	}
+
+	TextureRegion texRegion = null;
+	
+	public TextureRegion getTextureRegion() {
+		
+		return texRegion;
 	}
 
 }

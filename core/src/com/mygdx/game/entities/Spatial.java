@@ -1,7 +1,5 @@
 package com.mygdx.game.entities;
 
-import java.util.Comparator;
-
 import com.badlogic.gdx.math.Vector3;
 
 public class Spatial implements Comparable<Spatial> {
@@ -27,6 +25,10 @@ public class Spatial implements Comparable<Spatial> {
 
 	public void setTranslation(Vector3 translation) {
 		this.translation = translation;
+	}
+	
+	public void setTranslation(float x, float y, float z) {
+		this.translation = new Vector3(x,y,z);
 	}
 
 	public Vector3 getLocalTranslation() {

@@ -2,6 +2,10 @@ package com.mygdx.game.screens;
 
 
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -11,6 +15,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.mygdx.game.Unit;
 import com.mygdx.game.audio.MusicController;
 import com.mygdx.game.controller.GUIController;
+import com.mygdx.game.controller.InputActionManager;
+import com.mygdx.game.controller.InputActionManager.InputAction;
 import com.mygdx.game.controller.WorldController;
 import com.mygdx.game.entities.Battle;
 import com.mygdx.game.entities.GUI;
@@ -20,7 +26,7 @@ import com.mygdx.game.renderer.GUIRenderer;
 import com.mygdx.game.renderer.WorldRenderer;
 import com.mygdx.game.story.StoryController;
 
-public class GameScreen implements Screen, InputProcessor {
+public class GameScreen implements Screen {
 
 	private static World 			world;
 	private static Battle			battle;
@@ -32,7 +38,10 @@ public class GameScreen implements Screen, InputProcessor {
 	private static GUIController 	guicontroller;
 	private static StoryController 	storycontroller;
 	
-	private int width, height;
+	private static InputActionManager inputActionManager;
+	
+	private static int width;
+	private static int height;
 	
 	static GameState currentState = GameState.OVERWORLD;
 	
@@ -44,6 +53,7 @@ public class GameScreen implements Screen, InputProcessor {
 		battle = new Battle();
 		gui = new GUI();
 		
+		inputActionManager = new InputActionManager();
 		musicController = new MusicController();
 		
 		
@@ -56,7 +66,7 @@ public class GameScreen implements Screen, InputProcessor {
 		storycontroller = new StoryController();
 		
 		
-		Gdx.input.setInputProcessor(this);
+		Gdx.input.setInputProcessor(inputActionManager);
 		
 		
 		
@@ -133,92 +143,8 @@ public class GameScreen implements Screen, InputProcessor {
 	// * InputProcessor methods ***************************//
 
 	
+
 	
-	
-	
-	@Override
-	public boolean keyDown(int keycode) {	
-		
-		if(guicontroller.keyDown(keycode)){
-			
-			return true;
-		}
-		
-		return controller.keyDown(keycode);
-		
-		
-	}
-
-	@Override
-	public boolean keyUp(int keycode) {
-		
-		if(guicontroller.keyUp(keycode)){
-			
-			return true;
-		}
-
-		return controller.keyUp(keycode);
-		
-		
-	}
-
-	@Override
-	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int x, int y, int pointer, int button) {
-		if (!Gdx.app.getType().equals(ApplicationType.Android))
-			return false;
-		if (x < width / 2 && y > height / 2) {
-			//controller.leftPressed();
-			controller.keyDown(Keys.LEFT);
-		}
-		if (x > width / 2 && y > height / 2) {
-			controller.keyDown(Keys.RIGHT);
-			//controller.rightPressed();
-		}
-		return true;
-	}
-
-	@Override
-	public boolean touchUp(int x, int y, int pointer, int button) {
-		if (!Gdx.app.getType().equals(ApplicationType.Android))
-			return false;
-		if (x < width / 2 && y > height / 2) {
-			controller.keyUp(Keys.LEFT);
-		}
-		if (x > width / 2 && y > height / 2) {
-			controller.keyUp(Keys.RIGHT);
-		}
-		return true;
-	}
-
-	@Override
-	public boolean touchDragged(int x, int y, int pointer) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	/*@Override
-	public boolean touchMoved(int x, int y) {
-		// TODO Auto-generated method stub
-		return false;
-	}*/
-
-	@Override
-	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 	
 	
 	public static World getWorld()
@@ -274,6 +200,32 @@ public class GameScreen implements Screen, InputProcessor {
 
 	public static Battle getBattle() {
 		return battle;
+	}
+
+	public static InputActionManager getInputActionManager() {
+		
+		return inputActionManager;
+	}
+
+	public static boolean processInputAction(InputAction action, boolean asserted) {
+
+		if(guicontroller.processInputAction(action,asserted))
+		{
+			return true;
+		}
+		
+		
+		return controller.processInputAction(action,asserted);
+		
+		
+	}
+
+	public static int getWidth() {
+		return width;
+	}
+	
+	public static int getHeight() {
+		return height;
 	}
 
 }

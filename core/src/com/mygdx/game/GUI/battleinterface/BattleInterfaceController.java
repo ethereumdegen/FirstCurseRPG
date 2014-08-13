@@ -1,5 +1,8 @@
 package com.mygdx.game.GUI.battleinterface;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -7,11 +10,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-
+import com.mygdx.game.controller.InputActionManager.InputAction;
 import com.mygdx.game.screens.GameScreen;
 import com.mygdx.game.screens.GameState;
 
-public class BattleInterfaceController {
+public class BattleInterfaceController implements InputHandler {
 
 	private BitmapFont font;
 	Sound speechSound;
@@ -22,15 +25,23 @@ public class BattleInterfaceController {
 	
 	
 	PartyInfoScreen partyInfoScreen = new PartyInfoScreen();
+	UnitActionsScreen unitActionScreen = new UnitActionsScreen();
+	
 	
 
 	
 	public BattleInterfaceController()
 	{
+	
+		
+		leftNode.setTranslation(40, 0, 0);
+		rightNode.setTranslation(200, 0, 0);
+		
 		GUINode.attachChild(leftNode);
 		GUINode.attachChild(rightNode);
 		
-		leftNode.attachChild(partyInfoScreen);
+		rightNode.attachChild(partyInfoScreen);
+		leftNode.attachChild(unitActionScreen);
 		
 		font = new BitmapFont();
         font.setColor(Color.WHITE);
@@ -42,6 +53,9 @@ public class BattleInterfaceController {
        speechSound = Gdx.audio.newSound(Gdx.files.internal("sounds/typing.wav"));
 	}
 		
+	
+
+
 	String text = "";	
 	
 	
@@ -66,6 +80,10 @@ public class BattleInterfaceController {
 	int lastCharCount = 0;
 	public void update(float delta)
 	{
+		
+		GUINode.update(delta);
+		
+		
 		if(lerpTotal > 0)
 		{
 			if(lerpCounter < lerpTotal)
@@ -99,10 +117,7 @@ public class BattleInterfaceController {
 	SpriteBatch spriteBatch;
 	ShapeRenderer shapeRenderer;
 	public void render() {
-		
-		
-		
-		
+				
 		if(isActive() )
 		{
 		shapeRenderer.setColor(0.3f,0.3f,0.3f,1f);
@@ -129,14 +144,18 @@ public class BattleInterfaceController {
 		return GameScreen.getState() == GameState.BATTLE;
 	}
 
-	public void keyDown(int keycode) {
-		// TODO Auto-generated method stub
-		
-	}
 
-	public void keyUp(int keycode) {
-		// TODO Auto-generated method stub
+
+
+
+	@Override
+	public boolean processInputAction(InputAction action, boolean asserted) {
 		
+			partyInfoScreen.processInputAction(action,asserted);
+			
+			unitActionScreen.processInputAction(action,asserted);
+		
+		return false;
 	}
 
 }

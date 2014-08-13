@@ -10,10 +10,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.mygdx.game.GUI.battleinterface.InputHandler;
 import com.mygdx.game.camera.CameraCommand;
+import com.mygdx.game.controller.InputActionManager.InputAction;
 
 
-public class DialogController {
+public class DialogController implements InputHandler{
 
 	private BitmapFont font;
 	Sound speechSound;
@@ -151,6 +153,20 @@ public class DialogController {
 		
 		
 		
+	}
+	@Override
+	public boolean processInputAction(InputAction action, boolean asserted) {
+		
+	
+		if(asserted)
+		{
+			next();
+			
+			return true;
+		}
+		
+		
+		return false;
 	}
 	
 

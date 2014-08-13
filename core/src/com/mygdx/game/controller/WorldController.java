@@ -10,42 +10,23 @@ import com.badlogic.gdx.maps.MapObject;
 import com.mygdx.game.Unit;
 import com.mygdx.game.UnitState;
 import com.mygdx.game.AssetMGMT.MapRegion;
+import com.mygdx.game.GUI.battleinterface.InputHandler;
+import com.mygdx.game.controller.InputActionManager.InputAction;
 import com.mygdx.game.entities.World;
 import com.mygdx.game.screens.GameScreen;
 import com.mygdx.game.screens.GameState;
 
 
-public class WorldController {
+public class WorldController implements InputHandler {
 
-	enum Action {
-		LEFT, RIGHT, JUMP, FIRE, UP, DOWN
-	}
+	
 	
 	private World 	world;
 	
 	
 	Player player;
 	
-	
-	static Map<Integer, Action> keymap = new HashMap<Integer, Action>();
-	static {
-		keymap.put(Keys.LEFT, Action.LEFT);
-		keymap.put(Keys.RIGHT, Action.RIGHT);
-		keymap.put(Keys.UP, Action.UP);
-		keymap.put(Keys.DOWN, Action.DOWN);
-		keymap.put(Keys.SPACE, Action.JUMP);
-		keymap.put(Keys.A, Action.FIRE);
-	};
-	
-	static Map<Action, Boolean> actionstate = new HashMap<Action, Boolean>();
-	static {
-		actionstate.put(Action.LEFT, false);
-		actionstate.put(Action.RIGHT, false);
-		actionstate.put(Action.UP, false);
-		actionstate.put(Action.DOWN, false);
-		actionstate.put(Action.JUMP, false);
-		actionstate.put(Action.FIRE, false);
-	};
+
 
 	public WorldController(World world) {
 		this.world = world;
@@ -115,7 +96,7 @@ public class WorldController {
 	/** Change Bob's state and parameters based on input controls **/
 	private void processActions() {
 		
-		if(Player.getFocus() != null && !Player.cinematicMode() ){
+		if(Player.getFocus() != null && !Player.isCinematicMode() ){
 			Player.getFocus().setState(UnitState.IDLE);
 			// acceleration is 0 on the x
 			Player.getFocus().getAcceleration().setZero();
@@ -123,43 +104,33 @@ public class WorldController {
 			Player.getFocus().getVelocity().setZero();
 			
 			
-		if (actionstate.get(Action.LEFT)) {
+		if (GameScreen.getInputActionManager().getActionState(InputAction.LEFT)) {
 			// left is pressed
 			Player.getFocus().getVelocity().x = -1;
 			
-		} if (actionstate.get(Action.RIGHT)) {
-			// left is pressed
+		} if (GameScreen.getInputActionManager().getActionState(InputAction.RIGHT)) {
+			
 			Player.getFocus().getVelocity().x = 1;
-		} if (actionstate.get(Action.UP)) {
-			// left is pressed
+		} if (GameScreen.getInputActionManager().getActionState(InputAction.UP)) {
+		
 			Player.getFocus().getVelocity().y = 1;
 			
-		} if (actionstate.get(Action.DOWN)) {
-			// left is pressed
+		} if (GameScreen.getInputActionManager().getActionState(InputAction.DOWN)) {
+			
 			Player.getFocus().getVelocity().y = -1;
 			
 		}
 			
-			
-		
-		
-		
-		
+					
 		}
 		
 	}
 
-	public boolean keyDown(int keycode) {
-		if( keymap.get(keycode) != null  )
-			return actionstate.put(keymap.get(keycode),true);
-		
-		return false;
-	}
+	
 
-	public boolean keyUp(int keycode) {
-		if( keymap.get(keycode) != null  )
-			return actionstate.put(keymap.get(keycode),false);
-			
+	@Override
+	public boolean processInputAction(InputAction action, boolean asserted) {
+		
 		return false;
 	}
 

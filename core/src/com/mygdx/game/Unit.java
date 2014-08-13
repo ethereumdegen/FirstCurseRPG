@@ -37,7 +37,9 @@ public class Unit implements ApplicationListener{
 	public Unit(UnitType type) {
 		this.type = type;
 		
-		texRegion = new TextureRegion(getModel().getSheet().getTexture(),getModel().getX(),getModel().getY(),getModel().getSheet().tilesize,getModel().getSheet().tilesize);
+		texRegion = getModel().getTextureRegion();
+		
+
 		
 		worldsprite = new Sprite(texRegion);
 		worldsprite.setOrigin(0, 0);
@@ -209,6 +211,23 @@ public class Unit implements ApplicationListener{
 	Vector2 battleSpot = new Vector2();
 	public void setBattleSpot(Vector2 spot) {
 		battleSpot = spot;
+	}
+	
+	String name = "no name";
+
+	public String getName() {
+		return name;
+	}
+
+	public int getStatValue(UnitStats stat) {
+		
+		if(statvalues.containsKey(stat))
+		{
+			return statvalues.get(stat);
+		}
+		
+		
+		return 0;
 	}
 
 	

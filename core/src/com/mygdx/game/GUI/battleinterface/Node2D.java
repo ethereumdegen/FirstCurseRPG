@@ -45,20 +45,8 @@ public class Node2D extends Spatial{
 	
 	public void render() {//does not execute for nodes in the middle of the tree
 		
-		List<Spatial> lineage = new ArrayList<Spatial>();
-				
-		//collect all renderables and sort them by Z
-		for(Spatial child:children)
-		{
-			lineage.add(child);	
-			
-			if(child instanceof Node2D)
-			{
-				lineage.addAll(((Node2D)child).getChildren());	
-			}
-			
-		}
-				
+		List<Spatial> lineage = getLineage();
+		
 		Collections.sort(lineage);//sorts the entire lineage by Z
 		
 		for(Spatial renderable : lineage)
@@ -72,7 +60,30 @@ public class Node2D extends Spatial{
 	}
 
 
-	public void update(float millis) {
+	private List<Spatial> getLineage() {
+		List<Spatial> lineage = new ArrayList<Spatial>();
+		lineage.addAll(children);
+		
+		for(Spatial child:children)
+		{	
+			
+			if(child instanceof Node2D)
+			{
+				lineage.addAll(((Node2D)child).getLineage());	
+			}
+			
+		}		
+		
+		return lineage;
+	}
+
+	public void update(float delta) {
+				
+		for(Spatial child:children)
+		{
+			child.update(delta);  //recursive, not ordered by Z
+			
+		}
 		
 		
 	}

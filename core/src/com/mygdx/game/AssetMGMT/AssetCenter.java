@@ -16,6 +16,7 @@ public class AssetCenter {
 	{
 	manager = new AssetManager();
 	manager.load("sheets/basicsheet.png", Texture.class);
+	manager.load("sheets/uipack_rpg_sheet.png", Texture.class);
 	
 	
 	manager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));

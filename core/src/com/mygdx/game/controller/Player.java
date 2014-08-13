@@ -9,8 +9,16 @@ public class Player {
 	static Unit focus;
 	static MapRegion region;
 	
-	static boolean cinematicMode = false;
+	//static boolean cinematicMode = false;
 	
+	public static boolean isCinematicMode() {
+		return GameScreen.getGUI().getDialogController().getDialogIsActive();
+	}
+
+	//public static void setCinematicMode(boolean cinematicMode) {
+	//	Player.cinematicMode = cinematicMode;
+	//}
+
 	public static void setFocus(Unit unit)
 	{
 		focus = unit;	
@@ -32,10 +40,6 @@ public class Player {
 		return region;
 	}
 
-	public static boolean cinematicMode() {
-		
-		return cinematicMode;
-	}
 
 	public static Unit[] getBattlingParty() {
 		Unit[] battlingParty = new Unit[3];

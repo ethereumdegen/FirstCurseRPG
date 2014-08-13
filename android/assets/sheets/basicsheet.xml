@@ -1,0 +1,3 @@
+<TextureAtlas imagePath="sheet.png">
+	<SubTexture name="arrowBeige_left.png" x="303" y="486" width="22" height="21"/>
+</TextureAtlas>
