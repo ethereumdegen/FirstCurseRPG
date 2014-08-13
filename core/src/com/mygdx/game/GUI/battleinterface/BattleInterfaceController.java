@@ -8,26 +8,29 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
 import com.mygdx.game.screens.GameScreen;
 import com.mygdx.game.screens.GameState;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class BattleInterfaceController {
 
 	private BitmapFont font;
 	Sound speechSound;
 	
+	Node2D GUINode = new Node2D();
 	Node2D leftNode = new Node2D();
 	Node2D rightNode = new Node2D();
 	
-	BattleInterfaceScreen leftScreen;
-	BattleInterfaceScreen rightScreen;
+	
+	PartyInfoScreen partyInfoScreen = new PartyInfoScreen();
+	
+
 	
 	public BattleInterfaceController()
 	{
+		GUINode.attachChild(leftNode);
+		GUINode.attachChild(rightNode);
 		
-		
+		leftNode.attachChild(partyInfoScreen);
 		
 		font = new BitmapFont();
         font.setColor(Color.WHITE);
@@ -97,6 +100,9 @@ public class BattleInterfaceController {
 	ShapeRenderer shapeRenderer;
 	public void render() {
 		
+		
+		
+		
 		if(isActive() )
 		{
 		shapeRenderer.setColor(0.3f,0.3f,0.3f,1f);
@@ -108,9 +114,9 @@ public class BattleInterfaceController {
 		 spriteBatch.begin();
 		 font.drawWrapped(spriteBatch, text, 140, 90, 300);
 		 spriteBatch.end();
-		}
-		 
 		
+		 GUINode.render();
+		}
 	}
 	
 	

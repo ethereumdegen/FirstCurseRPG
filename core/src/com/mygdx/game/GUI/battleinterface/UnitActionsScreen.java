@@ -1,6 +1,8 @@
 package com.mygdx.game.GUI.battleinterface;
 
-public class UnitActionsScreen implements BattleInterfaceScreen{
+import com.mygdx.game.entities.Spatial;
+
+public class UnitActionsScreen extends Spatial implements BattleInterfaceScreen{
 
 	public void render() {
 		// TODO Auto-generated method stub

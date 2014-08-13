@@ -1,9 +1,11 @@
 package com.mygdx.game.GUI.battleinterface;
 
-public class PartyInfoScreen implements BattleInterfaceScreen{
+import com.mygdx.game.entities.Spatial;
+
+public class PartyInfoScreen extends Spatial implements BattleInterfaceScreen{
 
 	public void render() {
-		// TODO Auto-generated method stub
+		System.out.println("Rendering party infoooo");
 		
 	}
 
