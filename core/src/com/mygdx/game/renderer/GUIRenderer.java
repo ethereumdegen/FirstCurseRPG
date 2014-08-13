@@ -40,7 +40,7 @@ public class GUIRenderer {
 		
 		
 		
-		
+		gui.getBattleInterfaceController().render();
 		gui.getDialogController().render();
 		
 	}
@@ -49,7 +49,7 @@ public class GUIRenderer {
 	public void update(float delta) {
 		screenEffectManager.update(delta);
 		gui.getDialogController().update(delta);
-		
+		gui.getBattleInterfaceController().update(delta);
 	}
 
 	public ScreenEffectManager getScreenEffectManager() {

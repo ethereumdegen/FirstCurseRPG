@@ -12,6 +12,7 @@ import com.mygdx.game.UnitState;
 import com.mygdx.game.AssetMGMT.MapRegion;
 import com.mygdx.game.entities.World;
 import com.mygdx.game.screens.GameScreen;
+import com.mygdx.game.screens.GameState;
 
 
 public class WorldController {
@@ -79,8 +80,10 @@ public class WorldController {
 				
 				if(unit!=Player.getFocus() && Player.getFocus().getPosition().dst(unit.getPosition()) < 1)
 				{
-					System.out.println("start Battle!");
-					//need to code the battle screen!
+					
+					
+					GameScreen.getBattle().addEnemy(unit);
+					GameScreen.setState(GameState.BATTLE);
 				}
 				
 			}

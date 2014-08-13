@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import java.util.HashMap;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -13,6 +15,7 @@ import com.mygdx.game.AssetMGMT.UnitModel;
 import com.mygdx.game.AssetMGMT.UnitType;
 import com.mygdx.game.controller.Player;
 import com.mygdx.game.screens.GameScreen;
+import com.mygdx.game.screens.GameState;
 import com.mygdx.game.utility.TileCoordinate;
 
 public class Unit implements ApplicationListener{
@@ -25,18 +28,21 @@ public class Unit implements ApplicationListener{
 	float movespeed = 0.05f;
 	
 	Sound stepSound;
-	Sprite sprite;
+	Sprite worldsprite;
 	
+	Sprite battlesprite;
+		
+	HashMap<UnitStats, Integer> statvalues = new HashMap<UnitStats, Integer>();
 	
 	public Unit(UnitType type) {
 		this.type = type;
 		
 		texRegion = new TextureRegion(getModel().getSheet().getTexture(),getModel().getX(),getModel().getY(),getModel().getSheet().tilesize,getModel().getSheet().tilesize);
 		
-		sprite = new Sprite(texRegion);
-		sprite.setOrigin(0, 0);
-        sprite.setScale(1/16f);
-        sprite.setCenter(0.5f, 0.5f);
+		worldsprite = new Sprite(texRegion);
+		worldsprite.setOrigin(0, 0);
+        worldsprite.setScale(1/16f);
+        worldsprite.setCenter(0.5f, 0.5f);
         
         stepSound = Gdx.audio.newSound(Gdx.files.internal("sounds/grasswalk.wav"));
 	}
@@ -96,51 +102,70 @@ public class Unit implements ApplicationListener{
 	
 	public void update(float delta) {
 		
-		velocity.add(acceleration);
-		
-		
-		
-		//only allow position to change in a direction if that way is unblocked!
-		//set up the new possible X arm
-		Vector2 newposX = position.cpy().add(velocity.nor().scl(movespeed));
-		newposX.y = position.y;
-		
-		//set up the new possible Y arm
-		Vector2 newposY = position.cpy().add(velocity.nor().scl(movespeed));
-		newposY.x = position.x;
-		
-		if(GameScreen.getWorld().tileHasCollision(new TileCoordinate(newposX.cpy().add(0.5f,0.5f) ) ) == false)
+		if(GameScreen.getState() == GameState.OVERWORLD)
 		{
-			position.x = newposX.x;
+			velocity.add(acceleration);
 			
-		}
-		
-		if(GameScreen.getWorld().tileHasCollision(new TileCoordinate(newposY.cpy().add(0.5f,0.5f) ) ) == false)
-		{
-			position.y = newposY.y;
+			//only allow position to change in a direction if that way is unblocked!
+			//set up the new possible X arm
+			Vector2 newposX = position.cpy().add(velocity.nor().scl(movespeed));
+			newposX.y = position.y;
 			
-		}
-		
-		if(!velocity.isZero()){
-			movementcounter+= delta;
-			rotationangle = (float) Math.cos(movementcounter*10)*10;
+			//set up the new possible Y arm
+			Vector2 newposY = position.cpy().add(velocity.nor().scl(movespeed));
+			newposY.x = position.x;
 			
-			if(stepsoundcounter < movementcounter * 3)
+			if(GameScreen.getWorld().tileHasCollision(new TileCoordinate(newposX.cpy().add(0.5f,0.5f) ) ) == false)
 			{
-				stepsoundcounter++;
-				float stepVol = (40 - position.dst(Player.getFocus().position)) / 100;			
-				stepSound.play(stepVol);
+				position.x = newposX.x;
+				
 			}
-		
-		}else{
-			movementcounter = 0f;
-			rotationangle = 0f;
-			stepsoundcounter = 0;
+			
+			if(GameScreen.getWorld().tileHasCollision(new TileCoordinate(newposY.cpy().add(0.5f,0.5f) ) ) == false)
+			{
+				position.y = newposY.y;
+				
+			}
+			
+			if(!velocity.isZero()){
+				movementcounter+= delta;
+				rotationangle = (float) Math.cos(movementcounter*10)*10;
+				
+				if(stepsoundcounter < movementcounter * 3)
+				{
+					stepsoundcounter++;
+					float stepVol = (40 - position.dst(Player.getFocus().position)) / 100;			
+					stepSound.play(stepVol);
+				}
+			
+			}else{
+				movementcounter = 0f;
+				rotationangle = 0f;
+				stepsoundcounter = 0;
+			}
+			
+			
+			worldsprite.setPosition(position.x, position.y);
+			worldsprite.setRotation(rotationangle);
+		}
+		else
+		{
+			
+			this.position.set(battleSpot); //not always, but temporarily
+			
+			
+			//TEMP
+			worldsprite.setPosition(position.x, position.y);
+			worldsprite.setRotation(rotationangle);
+			
+			
+			//in battle
+			
+			
+			////battlesprite.setPosition(position.x, position.y);
+			//battlesprite.setRotation(rotationangle);
 		}
 		
-		
-		sprite.setPosition(position.x, position.y);
-		sprite.setRotation(rotationangle);
 		
 		
 	}
@@ -177,7 +202,13 @@ public class Unit implements ApplicationListener{
 
 	public Sprite getSprite() {
 		
-		return sprite;
+		return worldsprite;
+	}
+
+	
+	Vector2 battleSpot = new Vector2();
+	public void setBattleSpot(Vector2 spot) {
+		battleSpot = spot;
 	}
 
 	

@@ -36,5 +36,13 @@ public class Player {
 		
 		return cinematicMode;
 	}
+
+	public static Unit[] getBattlingParty() {
+		Unit[] battlingParty = new Unit[3];
+		battlingParty[0] = focus;
+		
+		
+		return battlingParty;
+	}
 	
 }

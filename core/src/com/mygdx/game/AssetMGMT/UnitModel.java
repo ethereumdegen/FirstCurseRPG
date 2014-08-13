@@ -6,7 +6,7 @@ public enum UnitModel {
 
 	HUMAN("human",SpriteSheet.BASICSHEET,190),
 	EYEMONSTER("eyemonster",SpriteSheet.BASICSHEET,216),
-	
+	MOUSE("mouse",SpriteSheet.BASICSHEET,210),
 	
 	
 	;

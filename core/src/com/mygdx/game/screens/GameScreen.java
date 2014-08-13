@@ -9,10 +9,13 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.mygdx.game.Unit;
+import com.mygdx.game.audio.MusicController;
 import com.mygdx.game.controller.GUIController;
 import com.mygdx.game.controller.WorldController;
+import com.mygdx.game.entities.Battle;
 import com.mygdx.game.entities.GUI;
 import com.mygdx.game.entities.World;
+import com.mygdx.game.renderer.BattleRenderer;
 import com.mygdx.game.renderer.GUIRenderer;
 import com.mygdx.game.renderer.WorldRenderer;
 import com.mygdx.game.story.StoryController;
@@ -20,8 +23,10 @@ import com.mygdx.game.story.StoryController;
 public class GameScreen implements Screen, InputProcessor {
 
 	private static World 			world;
+	private static Battle			battle;
 	private static GUI 				gui;
-	private static WorldRenderer 	renderer;
+	private static BattleRenderer   battleRenderer;
+	private static WorldRenderer 	worldRenderer;
 	private static WorldController	controller;
 	private static GUIRenderer 		guirenderer;
 	private static GUIController 	guicontroller;
@@ -29,11 +34,22 @@ public class GameScreen implements Screen, InputProcessor {
 	
 	private int width, height;
 	
+	static GameState currentState = GameState.OVERWORLD;
+	
+	static MusicController musicController;
+	
 	@Override
 	public void show() {
 		world = new World();
+		battle = new Battle();
 		gui = new GUI();
-		renderer = new WorldRenderer(world, true);
+		
+		musicController = new MusicController();
+		
+		
+		worldRenderer = new WorldRenderer(world, true);
+		battleRenderer = new BattleRenderer(battle, true);
+		
 		guirenderer = new GUIRenderer(gui);
 		controller = new WorldController(world);
 		guicontroller = new GUIController(gui);
@@ -41,6 +57,10 @@ public class GameScreen implements Screen, InputProcessor {
 		
 		
 		Gdx.input.setInputProcessor(this);
+		
+		
+		
+		
 	}
 
 	@Override
@@ -55,9 +75,20 @@ public class GameScreen implements Screen, InputProcessor {
 		storycontroller.update(delta);
 		
 		guirenderer.update(delta);
-		renderer.update(delta);
 		
-		renderer.render();
+		if(inOverworld())
+		{
+		worldRenderer.update(delta);		
+		worldRenderer.render();
+		}
+		else
+		{
+		battleRenderer.update(delta);		
+		battleRenderer.render();
+		
+		}
+		
+		
 		
 		Gdx.gl.glEnable(GL20.GL_BLEND); //allows the GUI to be transparent over the world
 	    Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -67,9 +98,14 @@ public class GameScreen implements Screen, InputProcessor {
 		 Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 	
+	private boolean inOverworld() {
+		
+		return currentState == GameState.OVERWORLD;
+	}
+
 	@Override
 	public void resize(int width, int height) {
-		renderer.setSize(width, height);
+		worldRenderer.setSize(width, height);
 		this.width = width;
 		this.height = height;
 	}
@@ -191,7 +227,7 @@ public class GameScreen implements Screen, InputProcessor {
 	}
 	public static WorldRenderer getWorldRenderer()
 	{
-		return renderer;
+		return worldRenderer;
 	}
 
 	public static GUIRenderer getGUIRenderer() {
@@ -201,6 +237,43 @@ public class GameScreen implements Screen, InputProcessor {
 	public static GUI getGUI() {
 		
 		return gui;
+	}
+
+	
+	public static void setState(GameState state) {
+		
+		if(currentState!=state)
+		{
+			
+			
+			if(state == GameState.BATTLE)
+			{
+				System.out.println("starting battle");
+				battle.initBattle();
+			}else
+			{
+				
+				
+				
+			}
+			
+			currentState = state;
+			
+		}
+		
+		
+	}
+
+	public static MusicController getMusicController() {
+		return musicController;
+	}
+
+	public static GameState getState() {
+		return currentState;
+	}
+
+	public static Battle getBattle() {
+		return battle;
 	}
 
 }

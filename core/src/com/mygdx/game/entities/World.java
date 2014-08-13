@@ -20,9 +20,9 @@ import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Unit;
 import com.mygdx.game.AssetMGMT.AssetCenter;
 import com.mygdx.game.AssetMGMT.MapRegion;
-import com.mygdx.game.AssetMGMT.MusicController;
 import com.mygdx.game.AssetMGMT.UnitModel;
 import com.mygdx.game.AssetMGMT.UnitType;
+import com.mygdx.game.audio.MusicController;
 import com.mygdx.game.controller.Player;
 import com.mygdx.game.screens.GameScreen;
 import com.mygdx.game.utility.TileCoordinate;
@@ -53,7 +53,7 @@ public class World {
 		replaceMonsters();
 		
 		
-		MusicController.playMusic();
+		
 		
 	}
 	

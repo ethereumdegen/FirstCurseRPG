@@ -20,7 +20,7 @@ public class AssetCenter {
 	
 	manager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
 	manager.load("maps/untitled.tmx", TiledMap.class);
-	
+	manager.load("maps/grassbattle.tmx", TiledMap.class);
 	
 	
 	manager.finishLoading();//lag until done

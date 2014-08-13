@@ -6,7 +6,7 @@ public enum UnitType {
 
 	HUMAN("human",UnitModel.HUMAN),
 	EYEMONSTER("eyemonster",UnitModel.EYEMONSTER),
-	
+	FIELDMOUSE("fieldmouse",UnitModel.MOUSE),
 	
 	
 	;

@@ -10,7 +10,7 @@ public class MapRegion {
 	Polygon poly;
 	
 	String name;
-	Color tint;
+	Color tint = Color.WHITE.cpy();
 	
 	public MapRegion(String name, Rectangle rect, Color color)
 	{
@@ -25,6 +25,11 @@ public class MapRegion {
 		this.name = name;
 		this.poly = polygon;
 		this.tint = color;
+	}
+
+	public MapRegion(String name, Rectangle rect) {
+		this.name = name;
+		this.rect = rect;
 	}
 
 	public boolean encapsulatesPoint(Vector2 vec){

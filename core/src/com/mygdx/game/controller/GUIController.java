@@ -2,6 +2,7 @@ package com.mygdx.game.controller;
 
 import com.mygdx.game.entities.GUI;
 import com.mygdx.game.screens.GameScreen;
+import com.mygdx.game.screens.GameState;
 
 public class GUIController {
 
@@ -20,11 +21,18 @@ public class GUIController {
 	}
 
 	public boolean keyDown(int keycode) {
-		if(GUIFocused()){
-			GameScreen.getGUI().getDialogController().next();
-			
+		
+		if(DialogActive()){
+			GameScreen.getGUI().getDialogController().next();			
 			return true;
 		}
+		
+		if(GameScreen.getState() == GameState.BATTLE)
+		{
+			GameScreen.getGUI().getBattleInterfaceController().keyDown(keycode);
+			return true;
+		}
+		
 		
 		
 		return false;
@@ -34,13 +42,19 @@ public class GUIController {
 
 	public boolean keyUp(int keycode) {
 		
+		if(GameScreen.getState() == GameState.BATTLE)
+		{
+			GameScreen.getGUI().getBattleInterfaceController().keyUp(keycode);
+			return true;
+		}
+		
 		
 		return false;
 	}
 	
 	
 	
-	public boolean GUIFocused()
+	public boolean DialogActive()
 	{
 		return GameScreen.getGUI().getDialogController().getDialogIsActive();
 		

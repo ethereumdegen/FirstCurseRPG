@@ -10,23 +10,25 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Unit;
+import com.mygdx.game.camera.BattleCameraManager;
 import com.mygdx.game.camera.WorldCameraManager;
 import com.mygdx.game.controller.Player;
+import com.mygdx.game.entities.Battle;
 import com.mygdx.game.entities.World;
 import com.mygdx.game.utility.TransitionalColor;
 
-public class WorldRenderer {
+public class BattleRenderer {
 
 	private static final float CAMERA_WIDTH = 10f;
 	private static final float CAMERA_HEIGHT = 7f;
 	private static final float RUNNING_FRAME_DURATION = 0.06f;
 	
-	private World world;
+	private Battle battle;
 	private OrthographicCamera cam;
 
 	private OrthogonalTiledMapRenderer maprenderer;
 	
-	private WorldCameraManager camManager;
+	private BattleCameraManager camManager;
 	
 
 
@@ -58,13 +60,13 @@ public class WorldRenderer {
 		ppuY = (float)height / CAMERA_HEIGHT;
 	}
 	
-	public WorldRenderer(World world, boolean debug) {
-		this.world = world;
+	public BattleRenderer(Battle battle, boolean debug) {
+		this.battle = battle;
 		this.cam = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
-		camManager = new WorldCameraManager(cam);
+		camManager = new BattleCameraManager(cam);
 		
 		
-		
+	
 		cam.setToOrtho(false, 30, 20);
 		
 		
@@ -76,7 +78,7 @@ public class WorldRenderer {
 		spriteBatch = new SpriteBatch();
 		loadTextures();
 		
-		maprenderer = new OrthogonalTiledMapRenderer(world.getMap(), 1 / 16f);
+		maprenderer = new OrthogonalTiledMapRenderer(battle.getMap(), 1 / 16f);
 			}
 	
 	
@@ -95,6 +97,7 @@ public class WorldRenderer {
 		terrainColor.update(delta);
 		camManager.update(delta);
 		
+		cam.position.set(11, 13, 0);
 		this.cam.update();
 	}
 	
@@ -144,18 +147,24 @@ public class WorldRenderer {
 	}
 
 	private void drawUnits() {
-		for(Unit unit: world.getUnits())
+		
+		for(int team = 0; team < 2;team++)
 		{
-			
-			//spriteBatch.draw(unit.getFrame(),unit.getPosition().x , unit.getPosition().y, unit.getDimensions().x , unit.getDimensions().y );
-			if(unit.getSprite()!=null){
-				unit.getSprite().draw(spriteBatch);
-				//System.out.println(  unit.getPosition() );
+			for(int unit=0;unit < 3;unit++)
+			{
+				
+				if(battle.getUnits()[team][unit] != null && battle.getUnits()[team][unit].getSprite()!=null){
+					
+					battle.getUnits()[team][unit].getSprite().draw(spriteBatch);
+					
+				}
+				
+				
 			}
 			
-			//spriteBatch.draw(unit.getFrame(),25,25,25,25); ///testing
 		}
 		
+				
 		
 		/*if(bob.getState().equals(State.WALKING)) {
 			bobFrame = bob.isFacingLeft() ? walkLeftAnimation.getKeyFrame(bob.getStateTime(), true) : walkRightAnimation.getKeyFrame(bob.getStateTime(), true);
@@ -190,7 +199,7 @@ public class WorldRenderer {
 		return cam;
 	}
 	
-	public WorldCameraManager getCameraManager() {
+	public BattleCameraManager getCameraManager() {
 		return camManager;
 	}
 

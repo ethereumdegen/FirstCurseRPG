@@ -12,7 +12,7 @@ import com.mygdx.game.AssetMGMT.MapRegion;
 import com.mygdx.game.controller.Player;
 import com.mygdx.game.screens.GameScreen;
 
-public class CameraManager {
+public class WorldCameraManager {
 
 	
 	List<CameraCommand> queuedCommands = new ArrayList<CameraCommand>();
@@ -20,7 +20,7 @@ public class CameraManager {
 	
 	OrthographicCamera cam;
 	
-	public CameraManager(OrthographicCamera cam) {
+	public WorldCameraManager(OrthographicCamera cam) {
 		this.cam=cam;
 		
 	}

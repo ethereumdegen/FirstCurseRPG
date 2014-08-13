@@ -121,6 +121,16 @@ public class ScreenEffectManager {
 		
 	}
 
+
+
+	public void forceScreenEffect(TintScreenEffect effect) {
+		
+		queuedEffects.clear();
+		currentEffect=null;
+		queueScreenEffect(effect);
+		
+	}
+
 	
 	
 	
