@@ -1,27 +1,24 @@
 package com.mygdx.game.GUI.battleinterface;
 
+import com.mygdx.game.GUI.battleinterface.UnitActionsScreen.UnitActions;
 import com.mygdx.game.controller.InputActionManager.InputAction;
+import com.mygdx.game.screens.GameScreen;
 
-public class UnitActionsScreen extends OptionsScreen implements InputHandler{
+public class TargetSelectScreen extends OptionsScreen implements InputHandler{
 
-	public enum UnitActions implements BattleOption
-	{
-		ATTACK,
-		POWERS,
-		ITEMS,
-		RUN
-		
-	}
-	
-	
-	
-	UnitActionsScreen()
+	TargetSelectScreen()
 	{			
 		super();
 		
-		options = new String[]{"Attack","Power","Item"};
+		for(int i = 0; i < 3 ;i++)
+		{
+			if(GameScreen.getBattle().getUnits()[1][i]!=null){
+				options[i] = GameScreen.getBattle().getUnits()[1][i].getName();
+			}
+		}
 		
 		
+				
 	}
 
 	

@@ -10,6 +10,8 @@ public class GraphSprite extends Spatial {
 	Sprite sprite;
 	SpriteBatch spriteBatch;
 	
+	boolean active = true;
+	
 	public GraphSprite(TextureRegion tex)
 	{
 		
@@ -24,15 +26,22 @@ public class GraphSprite extends Spatial {
 	@Override
 	public void render()
 	{
+		
+		if(active){
 		sprite.setPosition(this.getWorldTranslation().x, this.getWorldTranslation().y);
 		
 		spriteBatch.begin();
 		sprite.draw(spriteBatch);	
 		spriteBatch.end();
-		
+		}
 		
 		//System.out.println("rendering graphsprite" + sprite.getX() +"."+sprite.getY());
 		
+	}
+
+
+	public void setActive(boolean active) {
+		this.active=active;
 	}
 	
 	

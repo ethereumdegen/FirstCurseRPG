@@ -1,21 +1,39 @@
 package com.mygdx.game.GUI.battleinterface;
 
-import com.mygdx.game.entities.Spatial;
+import com.mygdx.game.controller.InputActionManager.InputAction;
 
-public class UnitAttacksScreen extends Spatial implements BattleInterfaceScreen{
+public class UnitAttacksScreen extends OptionsScreen implements InputHandler{
 
-	public void render() {
-		// TODO Auto-generated method stub
+	
+	
+	
+	UnitAttacksScreen()
+	{			
+		super();
 		
-	}
-
-
-	public void update(float millis) {
-		// TODO Auto-generated method stub
+		options = new String[]{"Slash","---","---","---"};
+		
 		
 	}
 
 	
+
+	@Override
+	public boolean processInputAction(InputAction action, boolean asserted) {
+		super.processInputAction(action,asserted);
+		
+		
+		
+		return false;
+	}
+
+
+	@Override
+	protected void selectAction() {
+		System.out.println("doing action " + selectionIndex );
+		
+	}
+
 	
 	
 }

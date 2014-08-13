@@ -33,15 +33,15 @@ public class PartyInfoScreen extends Node2D implements InputHandler{
 		for(int unit = UNIT_1; unit < UNIT_3; unit++)
 		{
 			vitals[unit][NAME] = new SimpleText();
-			vitals[unit][NAME].setTranslation(100,90 - unit*25,10);
+			vitals[unit][NAME].setTranslation(0,90 - unit*25,10);
 			this.attachChild(vitals[unit][NAME]);
 			
 			vitals[unit][HP] = new SimpleText();
-			vitals[unit][HP].setTranslation(200,90 - unit*25,10);
+			vitals[unit][HP].setTranslation(100,90 - unit*25,10);
 			this.attachChild(vitals[unit][HP]);
 			
 			vitals[unit][SP] = new SimpleText();
-			vitals[unit][SP].setTranslation(240,90 - unit*25,10);	
+			vitals[unit][SP].setTranslation(140,90 - unit*25,10);	
 			this.attachChild(vitals[unit][SP]);			
 			
 		}

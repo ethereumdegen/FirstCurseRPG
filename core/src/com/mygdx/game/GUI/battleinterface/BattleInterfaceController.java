@@ -1,8 +1,5 @@
 package com.mygdx.game.GUI.battleinterface;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -10,38 +7,47 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.mygdx.game.GUI.battleinterface.UnitActionsScreen.UnitActions;
 import com.mygdx.game.controller.InputActionManager.InputAction;
+import com.mygdx.game.entities.Spatial;
 import com.mygdx.game.screens.GameScreen;
 import com.mygdx.game.screens.GameState;
 
-public class BattleInterfaceController implements InputHandler {
+public class BattleInterfaceController implements InputHandler,BattleOptionListener {
 
 	private BitmapFont font;
 	Sound speechSound;
 	
 	Node2D GUINode = new Node2D();
 	Node2D leftNode = new Node2D();
+	Node2D centerNode = new Node2D();
 	Node2D rightNode = new Node2D();
 	
 	
 	PartyInfoScreen partyInfoScreen = new PartyInfoScreen();
+	
+	TargetSelectScreen targetSelectScreen = new TargetSelectScreen();
 	UnitActionsScreen unitActionScreen = new UnitActionsScreen();
-	
-	
-
-	
+	UnitAttacksScreen unitAttacksScreen = new UnitAttacksScreen();
+		
 	public BattleInterfaceController()
 	{
-	
+		unitActionScreen.registerListener(this);
+		unitAttacksScreen.registerListener(this);
+		targetSelectScreen.registerListener(this);
 		
-		leftNode.setTranslation(40, 0, 0);
-		rightNode.setTranslation(200, 0, 0);
+		
+		leftNode.setTranslation(30, 0, 0);
+		centerNode.setTranslation(200, 0, 0);
+		rightNode.setTranslation(400, 0, 0);
 		
 		GUINode.attachChild(leftNode);
+		GUINode.attachChild(centerNode);
 		GUINode.attachChild(rightNode);
 		
-		rightNode.attachChild(partyInfoScreen);
-		leftNode.attachChild(unitActionScreen);
+		rightNode.attachChild(targetSelectScreen);
+		centerNode.attachChild(unitActionScreen);
+		leftNode.attachChild(partyInfoScreen);
 		
 		font = new BitmapFont();
         font.setColor(Color.WHITE);
@@ -51,6 +57,16 @@ public class BattleInterfaceController implements InputHandler {
         shapeRenderer = new ShapeRenderer();
         
        speechSound = Gdx.audio.newSound(Gdx.files.internal("sounds/typing.wav"));
+       
+       initBattle();
+       
+	}
+	
+	
+	public void initBattle()
+	{
+		unitActionScreen.setActive(true);
+		
 	}
 		
 	
@@ -153,9 +169,55 @@ public class BattleInterfaceController implements InputHandler {
 		
 			partyInfoScreen.processInputAction(action,asserted);
 			
+			if(GUINode.hasDescendant(unitActionScreen))
+			{
 			unitActionScreen.processInputAction(action,asserted);
+			}
+						
+			if(GUINode.hasDescendant(unitAttacksScreen))
+			{
+			unitAttacksScreen.processInputAction(action,asserted);
+			}
 		
 		return false;
 	}
+
+
+
+
+	@Override
+	public void assertOption(BattleOption option) {
+		
+		if(option instanceof UnitActions)
+		{
+			UnitActions action = (UnitActions) option;
+			switch(action)
+			{
+			case ATTACK: showAttackScreen(); break;	
+			
+			}
+			
+			
+			
+			
+		}
+		
+		
+	}
+
+
+	
+
+	
+	private void showAttackScreen() {
+		
+		centerNode.detachAllChildren();
+		centerNode.attachChild(unitAttacksScreen);
+		
+		unitAttacksScreen.setActive(true);
+	}
+
+
+	
 
 }

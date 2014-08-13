@@ -1,14 +1,15 @@
 package com.mygdx.game.entities;
 
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.GUI.battleinterface.Node2D;
 
 public class Spatial implements Comparable<Spatial> {
 
 	Vector3 translation = new Vector3();
 
-	protected Spatial parent = null;
+	protected Node2D parent = null;
 
-	public void setParent(Spatial parent) {
+	public void setParent(Node2D parent) {
 		this.parent = parent;
 	}
 
@@ -48,6 +49,6 @@ public class Spatial implements Comparable<Spatial> {
 		return (int) (this.translation.z - other.translation.z);
 	}
 
-	
+
 
 }

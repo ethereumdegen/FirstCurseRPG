@@ -89,6 +89,32 @@ public class Node2D extends Spatial{
 	}
 
 	
-	
+	public boolean hasDescendant(Spatial spatial) {
+		if(hasChild(spatial)){
+			return true;
+		}
+		
+		for(Spatial child : children)
+		{
+			if(child instanceof Node2D)
+			{
+				Node2D childNode = (Node2D) child;
+				if( childNode.hasDescendant(spatial) )
+				{
+					return true;
+				}
+			}
+			
+		}
+		
+				
+		return false;
+	}
+
+	private boolean hasChild(Spatial spatial) {
+		
+		return children.contains(spatial);
+	}
+
 	
 }
