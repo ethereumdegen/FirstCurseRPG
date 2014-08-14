@@ -67,7 +67,7 @@ public class WorldCameraManager {
 			Vector2 camvec = new Vector2(cam.position.x,cam.position.y);
 			
 		
-				Vector2 diff = Player.getFocus().getPosition().cpy().sub(camvec);
+				Vector2 diff = Player.getFocus().getWorldModel().getPosition().cpy().sub(camvec);
 					if(diff.len() > 2){
 				
 				camvec = camvec.add(diff.nor().scl(0.05f * diff.len()));	

@@ -1,27 +1,41 @@
 package com.mygdx.game.AssetMGMT;
 
+import com.mygdx.game.UnitStats;
+import com.mygdx.game.utility.UnitStatDefinition;
+
 
 
 public enum UnitType {
 
-	HUMAN("human",UnitModel.HUMAN),
-	EYEMONSTER("eyemonster",UnitModel.EYEMONSTER),
-	FIELDMOUSE("fieldmouse",UnitModel.MOUSE),
+	HUMAN("human",UnitModelType.HUMAN, new UnitStatDefinition[]{
+			new UnitStatDefinition(UnitStats.HEALTH, 60)
+			
+	}),
+	EYEMONSTER("eyemonster",UnitModelType.EYEMONSTER, new UnitStatDefinition[]{
+			new UnitStatDefinition(UnitStats.HEALTH, 60)
+			
+	}),
+	FIELDMOUSE("fieldmouse",UnitModelType.MOUSE, new UnitStatDefinition[]{
+			new UnitStatDefinition(UnitStats.HEALTH, 5)
+			
+	}),
 	
 	
 	;
 
-	UnitType(String name,UnitModel model)
+	UnitStatDefinition[] basestats;
+	
+	UnitType(String name,UnitModelType model,UnitStatDefinition[] basestats)
 	{
 		this.name=name;
 		this.model=model;
-		
+		this.basestats=basestats;
 	}	
 	public String name = "";
 	
-	public  UnitModel model;
+	public  UnitModelType model;
 
-	public UnitModel getModel() {
+	public UnitModelType getModelType() {
 		return model;
 	}
 
@@ -39,6 +53,11 @@ public enum UnitType {
 	public String getName() {
 		
 		return name;
+	}
+
+	public UnitStatDefinition[] getBaseStats() {
+		
+		return basestats;
 	}
 	
 	

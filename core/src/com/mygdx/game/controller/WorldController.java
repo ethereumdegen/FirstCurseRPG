@@ -43,7 +43,7 @@ public class WorldController implements InputHandler {
 		
 		for(Unit unit : world.getUnits())
 		{
-			unit.update(delta);
+			unit.getWorldModel().update(delta);
 		}
 		
 		updatePlayerRegion();
@@ -59,7 +59,7 @@ public class WorldController implements InputHandler {
 			for(Unit unit : world.getUnits())
 			{
 				
-				if(unit!=Player.getFocus() && Player.getFocus().getPosition().dst(unit.getPosition()) < 1)
+				if(unit.isAlive() && unit!=Player.getFocus() && Player.getFocus().getWorldModel().getPosition().dst(unit.getWorldModel().getPosition()) < 1)
 				{
 					
 					
@@ -80,7 +80,7 @@ public class WorldController implements InputHandler {
 			
 			for(MapRegion region: GameScreen.getWorld().getRegions())
 			{
-				if(region.encapsulatesPoint(Player.getFocus().getPosition().cpy().scl(16)))
+				if(region.encapsulatesPoint(Player.getFocus().getWorldModel().getPosition().cpy().scl(16)))
 				{
 					Player.setRegion(region);					
 				}	
@@ -99,25 +99,26 @@ public class WorldController implements InputHandler {
 		if(Player.getFocus() != null && !Player.isCinematicMode() ){
 			Player.getFocus().setState(UnitState.IDLE);
 			// acceleration is 0 on the x
-			Player.getFocus().getAcceleration().setZero();
+			Player.getFocus().getWorldModel().getAcceleration().setZero();
 			// horizontal speed is 0
-			Player.getFocus().getVelocity().setZero();
+			Player.getFocus().getWorldModel().getVelocity().setZero();
 			
 			
 		if (GameScreen.getInputActionManager().getActionState(InputAction.LEFT)) {
 			// left is pressed
-			Player.getFocus().getVelocity().x = -1;
+			
+			Player.getFocus().getWorldModel().getVelocity().x = -1;
 			
 		} if (GameScreen.getInputActionManager().getActionState(InputAction.RIGHT)) {
 			
-			Player.getFocus().getVelocity().x = 1;
+			Player.getFocus().getWorldModel().getVelocity().x = 1;
 		} if (GameScreen.getInputActionManager().getActionState(InputAction.UP)) {
 		
-			Player.getFocus().getVelocity().y = 1;
+			Player.getFocus().getWorldModel().getVelocity().y = 1;
 			
 		} if (GameScreen.getInputActionManager().getActionState(InputAction.DOWN)) {
 			
-			Player.getFocus().getVelocity().y = -1;
+			Player.getFocus().getWorldModel().getVelocity().y = -1;
 			
 		}
 			

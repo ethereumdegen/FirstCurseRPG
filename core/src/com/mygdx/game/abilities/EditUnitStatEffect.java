@@ -5,7 +5,7 @@ import com.mygdx.game.UnitStats;
 public class EditUnitStatEffect extends AbilityEffect{
 
 	
-	EffectTargets targets;
+	
 	UnitStats stat;
 	int delta;
 	
@@ -15,4 +15,14 @@ public class EditUnitStatEffect extends AbilityEffect{
 		this.delta=delta;
 	}
 
+	public UnitStats getStat() {
+	
+		return stat;
+	}
+
+	
+	public int getDelta()
+	{
+		return delta;
+	}
 }

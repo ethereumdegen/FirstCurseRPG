@@ -120,12 +120,12 @@ public class WorldRenderer {
 		
 		
 		
-		spriteBatch.setColor(unitColor);
-		spriteBatch.setProjectionMatrix(cam.combined);
-		spriteBatch.begin();
+		//spriteBatch.setColor(unitColor);
+		//spriteBatch.setProjectionMatrix(cam.combined);
+		//spriteBatch.begin();
 			//drawTiles();
 			drawUnits();
-		spriteBatch.end();
+		//spriteBatch.end();
 		
 		
 		
@@ -134,23 +134,21 @@ public class WorldRenderer {
 	}
 
 
-	private void drawTiles() {
-		
-		
-		
-		/*for (Block block : world.getBlocks()) {
-			spriteBatch.draw(blockTexture, block.getPosition().x * ppuX, block.getPosition().y * ppuY, Block.SIZE * ppuX, Block.SIZE * ppuY);
-		}*/
-	}
 
 	private void drawUnits() {
 		for(Unit unit: world.getUnits())
 		{
 			
 			//spriteBatch.draw(unit.getFrame(),unit.getPosition().x , unit.getPosition().y, unit.getDimensions().x , unit.getDimensions().y );
-			if(unit.getSprite()!=null){
-				unit.getSprite().draw(spriteBatch);
+			//if(unit.getSprite()!=null){
+			//	unit.getSprite().draw(spriteBatch);
 				//System.out.println(  unit.getPosition() );
+			//}
+			
+			if(unit != null && unit.getSprite()!=null){
+				
+				unit.getWorldModel().draw(unitColor, cam.combined );
+				
 			}
 			
 			//spriteBatch.draw(unit.getFrame(),25,25,25,25); ///testing

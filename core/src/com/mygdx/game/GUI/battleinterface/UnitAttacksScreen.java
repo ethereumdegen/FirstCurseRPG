@@ -20,6 +20,8 @@ public class UnitAttacksScreen extends OptionsScreen implements InputHandler{
 	{
 		super.update(delta);
 		options[0] = "Slash";
+		
+		
 	}
 	
 	

@@ -5,7 +5,18 @@ import com.badlogic.gdx.math.Rectangle;
 
 public enum UtilitySprites {
 
-	SELECTIONSQUARE("selection", SpriteSheet.UIPACKRPG,"arrowSilver_right.png");
+	SILVERARROW("selection", SpriteSheet.UIPACKRPG,"arrowSilver_right"),
+	
+	ControlPad("pad",SpriteSheet.ONSCREENCONTROLS,"whitepluspad"), 
+	
+	A("A",SpriteSheet.ONSCREENCONTROLS,"A"),
+	
+	B("B",SpriteSheet.ONSCREENCONTROLS,"B"),
+	
+	
+	
+	
+	;
 	
 	UtilitySprites(String name,SpriteSheet sheet, int index)
 	{
@@ -22,7 +33,8 @@ public enum UtilitySprites {
 		this.name=name;
 		this.sheet=sheet;
 		
-		Rectangle rect = sheet.getElementRectFromXML(elementId);
+		Rectangle rect = sheet.getRegionRectangleFromAtlas(elementId);
+		
 		texRegion = new TextureRegion(sheet.getTexture(),(int) rect.x, (int) rect.y, (int) rect.width,(int) rect.height);
 		
 		

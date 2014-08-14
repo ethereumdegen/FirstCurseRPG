@@ -45,7 +45,7 @@ public class OptionsScreen extends Node2D implements InputHandler{
 		selectSound = Gdx.audio.newSound(Gdx.files.internal("sounds/typing.wav"));
 			 
 						
-		TextureRegion tex= UtilitySprites.SELECTIONSQUARE.getTextureRegion();
+		TextureRegion tex= UtilitySprites.SILVERARROW.getTextureRegion();
 		arrow = new GraphSprite(tex);
 				
 		this.attachChild(arrow);

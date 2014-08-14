@@ -3,12 +3,13 @@ package com.mygdx.game.renderer;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.entities.Spatial;
 
 public class GraphSprite extends Spatial {
 
 	Sprite sprite;
-	SpriteBatch spriteBatch;
+	protected SpriteBatch spriteBatch;
 	
 	boolean active = true;
 	
@@ -28,7 +29,10 @@ public class GraphSprite extends Spatial {
 	{
 		
 		if(active){
-		sprite.setPosition(this.getWorldTranslation().x, this.getWorldTranslation().y);
+		
+			if(!this.getWorldTranslation().isZero()){ //dirty fix! be careful with this
+			sprite.setPosition(this.getWorldTranslation().x, this.getWorldTranslation().y);
+			}
 		
 		spriteBatch.begin();
 		sprite.draw(spriteBatch);	
@@ -42,6 +46,12 @@ public class GraphSprite extends Spatial {
 
 	public void setActive(boolean active) {
 		this.active=active;
+	}
+
+
+	public Sprite getSprite() {
+		
+		return sprite;
 	}
 	
 	

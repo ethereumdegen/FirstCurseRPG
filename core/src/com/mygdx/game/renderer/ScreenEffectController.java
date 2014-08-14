@@ -8,15 +8,16 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.GUI.battleinterface.Node2D;
 import com.mygdx.game.camera.PanCameraCommand;
 
-public class ScreenEffectManager {
+public class ScreenEffectController extends Node2D{
 
 	/** Does effects on the screen such as color fades and battle sequence intros using coloring, particles, and more */
 	
 	List<ScreenEffect> queuedEffects = new ArrayList<ScreenEffect>();
 	
-	ScreenEffectManager()
+	ScreenEffectController()
 	{
 		shapeRenderer = new ShapeRenderer();
 	}

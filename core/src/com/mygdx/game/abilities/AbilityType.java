@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.mygdx.game.UnitStats;
+import com.mygdx.game.abilities.UnitManeuverEffect.UnitManeuverType;
 
 
 public enum AbilityType {
@@ -15,8 +16,8 @@ public enum AbilityType {
 			},
 	
 			new AbilityEffect[]{
-				new EditUnitStatEffect(UnitStats.HEALTH, -10, EffectTargets.TARGETENEMY)			
-			
+				new EditUnitStatEffect(UnitStats.HEALTH, -10, EffectTargets.TARGETENEMY),			
+				new UnitManeuverEffect(UnitManeuverType.RUSH, EffectTargets.TARGETENEMY)
 			}
 			
 			
@@ -42,5 +43,10 @@ public enum AbilityType {
 		}
 		
 		
+	}
+
+	public List<AbilityEffect> getEffects() {
+		
+		return effects;
 	}
 }

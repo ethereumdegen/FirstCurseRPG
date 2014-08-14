@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 
 
-public enum UnitModel {
+public enum UnitModelType {
 
 	HUMAN("human",SpriteSheet.BASICSHEET,190),
 	EYEMONSTER("eyemonster",SpriteSheet.BASICSHEET,216),
@@ -15,7 +15,7 @@ public enum UnitModel {
 	
 	;
 
-	UnitModel(String name,SpriteSheet sheet, int index)
+	UnitModelType(String name,SpriteSheet sheet, int index)
 	{
 		this.name=name;
 		this.sheet=sheet;
@@ -25,12 +25,12 @@ public enum UnitModel {
 		
 	}	
 	
-	UnitModel(String name,SpriteSheet sheet, String elementId)
+	UnitModelType(String name,SpriteSheet sheet, String elementId)
 	{
 		this.name=name;
 		this.sheet=sheet;
 		
-		Rectangle rect = sheet.getElementRectFromXML(elementId);
+		Rectangle rect = sheet.getRegionRectangleFromAtlas(elementId);
 		
 		texRegion = new TextureRegion(sheet.getTexture(),rect.x,rect.y,rect.width,rect.height);
 		
@@ -66,5 +66,8 @@ public enum UnitModel {
 		
 		return texRegion;
 	}
+	
+	
+	
 
 }

@@ -13,7 +13,7 @@ import com.mygdx.game.Unit;
 import com.mygdx.game.camera.BattleCameraManager;
 import com.mygdx.game.camera.WorldCameraManager;
 import com.mygdx.game.controller.Player;
-import com.mygdx.game.entities.Battle;
+import com.mygdx.game.entities.BattleController;
 import com.mygdx.game.entities.World;
 import com.mygdx.game.utility.TransitionalColor;
 
@@ -23,7 +23,7 @@ public class BattleRenderer {
 	private static final float CAMERA_HEIGHT = 7f;
 	private static final float RUNNING_FRAME_DURATION = 0.06f;
 	
-	private Battle battle;
+	private BattleController battle;
 	private OrthographicCamera cam;
 
 	private OrthogonalTiledMapRenderer maprenderer;
@@ -47,7 +47,7 @@ public class BattleRenderer {
 	**/
 	
 	
-	private SpriteBatch spriteBatch;
+//	private SpriteBatch spriteBatch;
 	private boolean debug = false;
 	private int width;
 	private int height;
@@ -60,7 +60,7 @@ public class BattleRenderer {
 		ppuY = (float)height / CAMERA_HEIGHT;
 	}
 	
-	public BattleRenderer(Battle battle, boolean debug) {
+	public BattleRenderer(BattleController battle, boolean debug) {
 		this.battle = battle;
 		this.cam = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
 		camManager = new BattleCameraManager(cam);
@@ -75,7 +75,7 @@ public class BattleRenderer {
 		this.cam.zoom = 0.5f;
 		this.cam.update();
 		this.debug = debug;
-		spriteBatch = new SpriteBatch();
+		//spriteBatch = new SpriteBatch();
 		loadTextures();
 		
 		maprenderer = new OrthogonalTiledMapRenderer(battle.getMap(), 1 / 16f);
@@ -123,28 +123,22 @@ public class BattleRenderer {
 		
 		
 		
-		spriteBatch.setColor(unitColor);
+		/*spriteBatch.setColor(unitColor);
 		spriteBatch.setProjectionMatrix(cam.combined);
+		
 		spriteBatch.begin();
 			//drawTiles();
 			drawUnits();
 		spriteBatch.end();
-		
-		
+		*/
+		drawUnits();
 		
 		if (debug)
 			drawDebug();
 	}
 
 
-	private void drawTiles() {
-		
-		
-		
-		/*for (Block block : world.getBlocks()) {
-			spriteBatch.draw(blockTexture, block.getPosition().x * ppuX, block.getPosition().y * ppuY, Block.SIZE * ppuX, Block.SIZE * ppuY);
-		}*/
-	}
+	
 
 	private void drawUnits() {
 		
@@ -155,7 +149,7 @@ public class BattleRenderer {
 				
 				if(battle.getUnits()[team][unit] != null && battle.getUnits()[team][unit].getSprite()!=null){
 					
-					battle.getUnits()[team][unit].getSprite().draw(spriteBatch);
+					battle.getUnits()[team][unit].getBattleModel().draw(unitColor, cam.combined );
 					
 				}
 				
@@ -201,6 +195,16 @@ public class BattleRenderer {
 	
 	public BattleCameraManager getCameraManager() {
 		return camManager;
+	}
+
+	public void initBattle() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void endBattle() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

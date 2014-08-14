@@ -10,35 +10,36 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.mygdx.game.AssetMGMT.CommonSounds;
 import com.mygdx.game.GUI.battleinterface.InputHandler;
+import com.mygdx.game.GUI.battleinterface.Node2D;
+import com.mygdx.game.GUI.battleinterface.SimpleText;
 import com.mygdx.game.camera.CameraCommand;
 import com.mygdx.game.controller.InputActionManager.InputAction;
 
 
-public class DialogController implements InputHandler{
+public class DialogController extends Node2D implements InputHandler{
 
-	private BitmapFont font;
-	Sound speechSound;
+	private SimpleText text;
+	
 	
 	List<DialogInfo> queuedInfo = new ArrayList<DialogInfo>();
-	
+	GUIShape background = new GUIShape();
 	
 	public DialogController()
 	{
 		
-		font = new BitmapFont();
-        font.setColor(Color.WHITE);
-        font.setScale(1.2f);
+		text = new SimpleText();
+		text.setTranslation(140, 90, 1);
+    
         
-        spriteBatch = new SpriteBatch();
-        shapeRenderer = new ShapeRenderer();
         
-       speechSound = Gdx.audio.newSound(Gdx.files.internal("sounds/typing.wav"));
+       this.attachChild(text);
+       
+       this.attachChild(background);
 	}
 		
-	String text = "";	
-	
-	
+
 	
 	float lerpCounter = 0;
 	float lerpTotal = 0;
@@ -60,7 +61,11 @@ public class DialogController implements InputHandler{
 	int lastCharCount = 0;
 	public void update(float delta)
 	{
-		if(lerpTotal > 0)
+		super.update(delta);
+		
+		this.setVisible(dialogIsActive());
+		
+		if(lerpTotal > 0 && dialogIsActive())
 		{
 			if(lerpCounter < lerpTotal)
 			{		 
@@ -71,11 +76,11 @@ public class DialogController implements InputHandler{
 				if(charCount > lastCharCount)
 				{
 					lastCharCount = charCount;
-					speechSound.play(0.5f);
+					CommonSounds.SELECT.play(0.5f);
 				}
 				
 				
-				text = nextText.substring(0, charCount);
+				text.setText(nextText.substring(0, charCount));
 				
 				
 			}else
@@ -83,16 +88,20 @@ public class DialogController implements InputHandler{
 				lerpTotal = 0;
 				lerpCounter = 0;
 				
-				text = nextText;
+				text.setText(nextText);
 			}
 			
 		}
 		
 		
 	}
-	SpriteBatch spriteBatch;
-	ShapeRenderer shapeRenderer;
+	
+	/*@Override
 	public void render() {
+		super.render();
+		
+		
+		
 		if(dialogIsActive)
 		{
 		shapeRenderer.setColor(0.3f,0.3f,0.3f,1f);
@@ -107,7 +116,10 @@ public class DialogController implements InputHandler{
 		}
 		 
 		
-	}
+	}*/
+	
+	
+	
 	public void queueDialogAction(DialogInfo info) {
 		
 		queuedInfo.add(info);
@@ -123,7 +135,7 @@ public class DialogController implements InputHandler{
 	
 	boolean dialogIsActive = false;
 	
-	public boolean getDialogIsActive() {
+	public boolean dialogIsActive() {
 		
 		return dialogIsActive;
 	}

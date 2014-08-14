@@ -143,7 +143,7 @@ public class Chapter1 extends StoryChapter{
 				MapRegion region = GameScreen.getWorld().getRegionByName( (String) ((EnterRegionTrigger)trig).getValue() );
 				
 				
-				if(region.encapsulatesPoint(Player.getFocus().getPosition().cpy().scl(16)))
+				if(region.encapsulatesPoint(Player.getFocus().getWorldModel().getPosition().cpy().scl(16)))
 				{
 					return true;
 					
@@ -180,7 +180,7 @@ public class Chapter1 extends StoryChapter{
 			DialogInfo info = (DialogInfo) ((QueueDialogAction)action).getValue();
 			
 			//queue this up
-			GameScreen.getGUI().getDialogController().queueDialogAction(info);  
+			GameScreen.getGUIController().getDialogController().queueDialogAction(info);  
 			
 								
 		}	
@@ -203,7 +203,7 @@ public class Chapter1 extends StoryChapter{
 			
 			ScreenEffect command = (ScreenEffect) ((ScreenEffectAction)action).getValue();
 			
-			GameScreen.getGUIRenderer().getScreenEffectManager().queueScreenEffect( command );
+			GameScreen.getGUIController().getScreenEffectManager().queueScreenEffect( command );
 			
 			
 			

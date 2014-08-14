@@ -7,6 +7,10 @@ public class Spatial implements Comparable<Spatial> {
 
 	Vector3 translation = new Vector3();
 
+	protected boolean visible = true;
+	
+	
+
 	protected Node2D parent = null;
 
 	public void setParent(Node2D parent) {
@@ -49,6 +53,12 @@ public class Spatial implements Comparable<Spatial> {
 		return (int) (this.translation.z - other.translation.z);
 	}
 
+	public boolean isVisible() {
+		return visible;
+	}
 
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
 
 }

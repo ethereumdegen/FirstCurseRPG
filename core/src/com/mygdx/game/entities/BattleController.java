@@ -20,20 +20,25 @@ import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Unit;
 import com.mygdx.game.AssetMGMT.AssetCenter;
 import com.mygdx.game.AssetMGMT.MapRegion;
-import com.mygdx.game.AssetMGMT.UnitModel;
+import com.mygdx.game.AssetMGMT.UnitModelType;
 import com.mygdx.game.AssetMGMT.UnitType;
+import com.mygdx.game.abilities.AbilityEffect;
+import com.mygdx.game.abilities.AbilityExecutionInfo;
 import com.mygdx.game.abilities.AbilityType;
+import com.mygdx.game.abilities.EditUnitStatEffect;
+import com.mygdx.game.abilities.EffectTargets;
 import com.mygdx.game.audio.MusicController;
 import com.mygdx.game.audio.MusicalEmotion;
 import com.mygdx.game.controller.Player;
 import com.mygdx.game.renderer.ScreenEffect;
 import com.mygdx.game.renderer.TintScreenEffect;
 import com.mygdx.game.screens.GameScreen;
+import com.mygdx.game.screens.GameState;
 import com.mygdx.game.utility.TileCoordinate;
 
 
 
-public class Battle {
+public class BattleController {
 
 	/** The blocks making up the world **/
 	//List<TerrainTile> tiles = new ArrayList<TerrainTile>();
@@ -44,10 +49,12 @@ public class Battle {
 	
 	Unit units[][] = new Unit[2][3];
 	
+	static final int ALLIED_TEAM_ID = 0;
+	static final int ENEMY_TEAM_ID = 1;
 	
 	TiledMap map;
 
-	public Battle() {
+	public BattleController() {
 		
 		map = AssetCenter.getManager().get("maps/grassbattle.tmx");
 		
@@ -105,16 +112,16 @@ public class Battle {
 
 	public void initBattle() {
 		
-	GameScreen.getGUIRenderer().getScreenEffectManager().forceScreenEffect( new TintScreenEffect(Color.BLACK) );		
-	GameScreen.getGUIRenderer().getScreenEffectManager().queueScreenEffect(new TintScreenEffect(Color.CLEAR,4));
 		
+		GameScreen.getBattleRenderer().initBattle();
+		GameScreen.getGUIController().getBattleInterfaceController().initBattle();
 		
-				
+		GameScreen.getGUIController().getScreenEffectManager().forceScreenEffect( new TintScreenEffect(Color.BLACK) );		
+		GameScreen.getGUIController().getScreenEffectManager().queueScreenEffect(new TintScreenEffect(Color.CLEAR,4));
+						
 		GameScreen.getMusicController().setMusicalEmotion(MusicalEmotion.BATTLE);
 		
 		units[0] = Player.getBattlingParty();
-		
-		
 		
 		
 		for(int team = 0; team < 2;team++)
@@ -124,7 +131,7 @@ public class Battle {
 				
 				if(getUnits()[team][unit] != null && getUnits()[team][unit].getSprite()!=null){
 					
-					getUnits()[team][unit].setBattleSpot(
+					getUnits()[team][unit].getBattleModel().setBattleSpot(
 							getUnitPositions()[team][unit].getCenter().cpy().scl(1/16f)    );
 					
 					
@@ -134,7 +141,51 @@ public class Battle {
 			}
 			
 		}
+		
+		
 	}
+	
+	
+	public void endBattle(){
+		System.out.println("ending battle");
+		GameScreen.getMusicController().setMusicalEmotion(MusicalEmotion.CALM);
+		GameScreen.getBattleRenderer().endBattle();
+		GameScreen.getGUIController().getBattleInterfaceController().endBattle();
+	}
+	
+	public void update(float delta)
+	{
+		
+		for(int team = 0; team < 2;team++)
+		{
+			for(int unit=0;unit < 3;unit++)
+			{
+				if(units[team][unit]!=null)
+				{
+				units[team][unit].getBattleModel().update(delta);
+				}
+			}
+		}
+		
+		
+	}
+	
+	public boolean battleIsOver()
+	{
+		
+		boolean allDead = true;
+		for(Unit enemy : units[ENEMY_TEAM_ID])
+		{
+			if(enemy !=null && enemy.isAlive())
+			{
+				allDead = false;
+			}
+			
+		}
+		return allDead;
+		
+	}
+	
 	
 	
 	
@@ -145,18 +196,6 @@ public class Battle {
 	}
 	
 
-	/*private Unit spawnUnit(UnitType type, TileCoordinate tileCoordinate) {
-		
-		return spawnUnit(type, tileCoordinate.getPos());
-	}
-		
-	private Unit spawnUnit(UnitType type,Vector2 pos) {
-		Unit unit = new Unit(type);
-		unit.getPosition().set(pos);
-		units.add(unit);
-		System.out.println("SPAWNING ");
-		return unit;
-	}*/
 
 	
 	public Unit[][] getUnits() {
@@ -177,14 +216,61 @@ public class Battle {
 	}
 
 
-	public void executeUnitAbility() {
+	public void executeUnitAbility(AbilityExecutionInfo info) {
 		AbilityType type = AbilityType.SLASH;
 	
+		System.out.println("executing unit ability in battle!");
+		for(AbilityEffect effect : type.getEffects()){
+				executeAbilityEffect(info, effect);
+		}
+	}
+
+	public void executeAbilityEffect(AbilityExecutionInfo info, AbilityEffect effect) {
+		
+		if(effect instanceof EditUnitStatEffect)			
+		{
+			EditUnitStatEffect stateffect = (EditUnitStatEffect) effect;
+			for(Unit target :  getTargets(info,effect)){
+				target.editStatValue(stateffect.getStat(),stateffect.getDelta());
+			}
+			
+			
+		}
+		
 		
 	}
 
-	public void executeAbilityEffect() {
+
+	private Unit[] getTargets(AbilityExecutionInfo info, AbilityEffect effect) {
+		
+		if(effect.getTargets() == EffectTargets.SELF)
+		{
+			return new Unit[]{info.getCaster()};
+		}
+		
+		if(effect.getTargets() == EffectTargets.TARGETENEMY
+				||  effect.getTargets() == EffectTargets.TARGETALLY )
+		{
+			return new Unit[]{info.getTarget()};
+		}
+		
+		if(effect.getTargets() == EffectTargets.EVERYALLY )
+		{
+			return units[ALLIED_TEAM_ID];
+		}
+		
+		if(effect.getTargets() == EffectTargets.EVERYENEMY )
+		{
+			return units[ENEMY_TEAM_ID];
+		}
+		
+		return new Unit[]{};
 	}
+	
+	
+	
+	
+	
 
 	
 }

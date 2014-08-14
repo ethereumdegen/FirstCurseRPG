@@ -7,6 +7,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.MyRPG;
 import com.mygdx.game.screens.GameScreen;
 
 public class InputActionManager implements InputProcessor{
@@ -88,29 +90,50 @@ public class InputActionManager implements InputProcessor{
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		if (!Gdx.app.getType().equals(ApplicationType.Android))
+		if (!MyRPG.onMobile())
 			return false;
-		if (x < GameScreen.getWidth() / 2 && y > GameScreen.getHeight() / 2) {
+		
+		Vector2 touchVector = new Vector2(x,GameScreen.getHeight() - y);
+		
+		for(InputAction action : InputAction.values())
+		{
+			
+		if( GameScreen.getGUIController().getControls().getHitBox(action).contains(touchVector)  )
+		{			
+			
+			actionstate.put(action, true);
+			GameScreen.processInputAction(action,true);
+		}
+		}
+		
+		/*if (x < GameScreen.getWidth() / 2 && y > GameScreen.getHeight() / 2) {
 			//controller.leftPressed();
 			keyDown(Keys.LEFT);
 		}
+		
 		if (x > GameScreen.getWidth() / 2 && y > GameScreen.getHeight() / 2) {
 			keyDown(Keys.RIGHT);
 			//controller.rightPressed();
-		}
+		}*/
 		return true;
 	}
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		if (!Gdx.app.getType().equals(ApplicationType.Android))
+		if (!MyRPG.onMobile())
 			return false;
-		if (x < GameScreen.getWidth() / 2 && y > GameScreen.getHeight() / 2) {
-			keyUp(Keys.LEFT);
-		}
-		if (x > GameScreen.getWidth() / 2 && y > GameScreen.getHeight() / 2) {
-			keyUp(Keys.RIGHT);
-		}
+		
+		
+		actionstate.put(InputAction.LEFT, false);
+		actionstate.put(InputAction.RIGHT, false);
+		actionstate.put(InputAction.UP, false);
+		actionstate.put(InputAction.DOWN, false);
+		actionstate.put(InputAction.FIRE, false);
+		actionstate.put(InputAction.JUMP, false);
+		
+		
+		
+				
 		return true;
 	}
 
@@ -125,6 +148,9 @@ public class InputActionManager implements InputProcessor{
 		// TODO Auto-generated method stub
 		return false;
 	}*/
+	
+	
+	
 
 	@Override
 	public boolean scrolled(int amount) {
@@ -137,6 +163,8 @@ public class InputActionManager implements InputProcessor{
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	
 	
 	
 }

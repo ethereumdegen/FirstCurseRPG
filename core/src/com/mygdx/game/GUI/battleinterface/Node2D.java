@@ -45,7 +45,7 @@ public class Node2D extends Spatial{
 	
 	public void render() {//does not execute for nodes in the middle of the tree
 		
-		List<Spatial> lineage = getLineage();
+		List<Spatial> lineage = getVisibleLineage();
 		
 		Collections.sort(lineage);//sorts the entire lineage by Z
 		
@@ -53,9 +53,14 @@ public class Node2D extends Spatial{
 		{
 			if(!(renderable instanceof Node2D))//eliminates lag and multirender
 			{
+				if(renderable.isVisible())
+				{
 				renderable.render();
+				}
 			}
 		}
+		
+	
 		
 	}
 
@@ -76,13 +81,41 @@ public class Node2D extends Spatial{
 		
 		return lineage;
 	}
+	
+	private List<Spatial> getVisibleLineage() {
+		List<Spatial> lineage = new ArrayList<Spatial>();
+		
+		for(Spatial child : children)
+		{
+			if(child.isVisible())
+			{
+				lineage.add(child);
+			}
+			
+		}
+				
+		for(Spatial child:children)
+		{	
+			
+			if(child instanceof Node2D && child.isVisible())
+			{
+				lineage.addAll(((Node2D)child).getVisibleLineage());	
+			}
+			
+		}		
+		
+		return lineage;
+	}
+	
+	
+	
+	
 
 	public void update(float delta) {
 				
 		for(Spatial child:children)
 		{
-			child.update(delta);  //recursive, not ordered by Z
-			
+			child.update(delta);  //recursive, not ordered by Z	
 		}
 		
 		

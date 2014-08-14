@@ -20,7 +20,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Unit;
 import com.mygdx.game.AssetMGMT.AssetCenter;
 import com.mygdx.game.AssetMGMT.MapRegion;
-import com.mygdx.game.AssetMGMT.UnitModel;
+import com.mygdx.game.AssetMGMT.UnitModelType;
 import com.mygdx.game.AssetMGMT.UnitType;
 import com.mygdx.game.audio.MusicController;
 import com.mygdx.game.controller.Player;
@@ -188,7 +188,7 @@ public class World {
 	
 	private Unit spawnUnit(UnitType type,Vector2 pos) {
 		Unit unit = new Unit(type);
-		unit.getPosition().set(pos);
+		unit.getWorldModel().setPosition(pos.x,pos.y);
 		units.add(unit);
 		System.out.println("SPAWNING ");
 		return unit;

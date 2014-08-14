@@ -3,6 +3,10 @@ package com.mygdx.game.AssetMGMT;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
@@ -12,10 +16,14 @@ public enum SpriteSheet {
 	
 	
 	BASICSHEET("sheets/basicsheet.png",16),
-	UIPACKRPG("sheets/uipack_rpg_sheet.png","sheets/uipack_rpg_sheet.xml");	
+	UIPACKRPG("sheets/uipackrpg.png","sheets/uipackrpg.atlas"), 
+	ONSCREENCONTROLS("sheets/controls.png","sheets/controls.atlas")
+	
+	
+	;	
 	
 		public  String filepath = "";
-		public  String xmlpath = "";
+		public  String atlaspath = "";
 		public  int tilesize = 16;
 		public int tilesPerRow = 10;
 	
@@ -27,9 +35,9 @@ public enum SpriteSheet {
 	}
 
 	
-	SpriteSheet(String filepath, String xmlpath){
+	SpriteSheet(String filepath, String atlaspath){
 		this.filepath=filepath;
-		this.xmlpath=xmlpath;
+		this.atlaspath=atlaspath;
 		
 	}
 
@@ -45,7 +53,7 @@ public enum SpriteSheet {
 		return AssetCenter.getManager().get(filepath,Texture.class);
 	}
 
-
+/*
 	public Rectangle getElementRectFromXML(String elementId) {
 		System.out.println("reading XML");
 		Rectangle rect = new Rectangle();
@@ -78,5 +86,28 @@ public enum SpriteSheet {
 		
 		return rect;
 	}
+	*/
+	
+	public Rectangle getRegionRectangleFromAtlas(String elementId) {
+		TextureAtlas atlas;
+		atlas = new TextureAtlas(Gdx.files.internal(atlaspath));
+		AtlasRegion region = atlas.findRegion(elementId);
+		
+		System.out.println(elementId  );
+		Rectangle rect = new Rectangle(region.getRegionX(),region.getRegionY(),region.getRegionWidth(),region.getRegionHeight());
+				
+		return rect;
+	}
+
+
+	public Sprite getSpriteFromAtlas(String elementId) {
+		TextureAtlas atlas;
+		atlas = new TextureAtlas(Gdx.files.internal(atlaspath));
+		//AtlasRegion region = atlas.findRegion(elementId);
+		
+		
+		return atlas.createSprite(elementId);
+	}
+	
 	
 }

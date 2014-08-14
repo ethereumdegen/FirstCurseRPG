@@ -12,7 +12,7 @@ public class Player {
 	//static boolean cinematicMode = false;
 	
 	public static boolean isCinematicMode() {
-		return GameScreen.getGUI().getDialogController().getDialogIsActive();
+		return GameScreen.getGUIController().getDialogController().dialogIsActive();
 	}
 
 	//public static void setCinematicMode(boolean cinematicMode) {
