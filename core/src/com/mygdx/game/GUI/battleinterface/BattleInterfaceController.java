@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.mygdx.game.AssetMGMT.CommonSounds;
+import com.mygdx.game.AssetMGMT.UtilitySprites;
 import com.mygdx.game.GUI.GUIShape;
 import com.mygdx.game.GUI.battleinterface.UnitActionsScreen.UnitActions;
 import com.mygdx.game.abilities.AbilityExecutionInfo;
@@ -20,7 +21,7 @@ import com.mygdx.game.screens.GameState;
 public class BattleInterfaceController extends Node2D implements InputHandler,BattleOptionListener {
 
 	
-	GUIShape background = new GUIShape();
+	SimpleNinePatch background;
 	
 	
 	Node2D leftNode = new Node2D();
@@ -41,7 +42,7 @@ public class BattleInterfaceController extends Node2D implements InputHandler,Ba
 	public BattleInterfaceController()
 	{
 		
-		
+		 background = new SimpleNinePatch(UtilitySprites.GRAYBACKGROUND.getTextureRegion());
 		
 		unitActionScreen.registerListener(this);
 		unitAttacksScreen.registerListener(this);

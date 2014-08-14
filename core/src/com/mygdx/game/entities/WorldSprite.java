@@ -1,5 +1,6 @@
 package com.mygdx.game.entities;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -28,18 +29,19 @@ public class WorldSprite extends Spatial {
 	
 	public WorldSprite(TextureRegion tex)
 	{
-		
-		
-		sprite = new Sprite(tex);
-		
+		sprite = new Sprite(tex);		
 
 		spriteBatch = new SpriteBatch();
 	}
 	
 	
+	
+	
 	@Override
 	public void render()
 	{
+		
+		
 		
 		if(active){
 		sprite.setPosition(position.x, position.y);	
@@ -85,12 +87,22 @@ public class WorldSprite extends Spatial {
 	
 	
 	protected float rotationangle = 0f;
+	
+
 	protected float movementcounter = 0f;
 	
 	protected int stepsoundcounter = 0;
 	protected float movespeed = 0.05f;
 	
-	
+	public float getRotationangle() {
+		return rotationangle;
+	}
+
+
+	public void setRotationangle(float rotationangle) {
+		this.rotationangle = rotationangle;
+	}
+
 	
 	
 	public Vector2 getDimensions() {

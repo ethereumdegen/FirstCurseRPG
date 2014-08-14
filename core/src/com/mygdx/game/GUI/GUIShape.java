@@ -42,6 +42,16 @@ public class GUIShape extends Spatial{
 		
 		
 	}
+
+	public void setRect(int x , int y, int width, int height) {
+		rect = new Rectangle(x,y,width,height);
+		
+	}
+
+	public void setColor(Color color) {
+		this.color=color;
+		
+	}
 	
 	 
 	

@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.mygdx.game.UnitStats;
+import com.mygdx.game.AssetMGMT.CommonSounds;
 import com.mygdx.game.abilities.UnitManeuverEffect.UnitManeuverType;
+import com.mygdx.game.entities.UnitModelAnimation;
 
 
 public enum AbilityType {
@@ -17,7 +19,9 @@ public enum AbilityType {
 	
 			new AbilityEffect[]{
 				new EditUnitStatEffect(UnitStats.HEALTH, -10, EffectTargets.TARGETENEMY),			
-				new UnitManeuverEffect(UnitManeuverType.RUSH, EffectTargets.TARGETENEMY)
+				new UnitManeuverEffect(UnitManeuverType.RUSH, EffectTargets.TARGETENEMY),
+				new UnitAnimationEffect(UnitModelAnimation.DAMAGED, EffectTargets.TARGETENEMY),
+				new PlaySoundEffect(CommonSounds.DAMAGE.getSound(),0.5f)
 			}
 			
 			

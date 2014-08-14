@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.GUI.GUIShape;
 import com.mygdx.game.GUI.battleinterface.Node2D;
 import com.mygdx.game.camera.PanCameraCommand;
 
@@ -17,9 +18,12 @@ public class ScreenEffectController extends Node2D{
 	
 	List<ScreenEffect> queuedEffects = new ArrayList<ScreenEffect>();
 	
+	GUIShape overlay = new GUIShape();
+	
 	ScreenEffectController()
 	{
-		shapeRenderer = new ShapeRenderer();
+		overlay.setRect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		this.attachChild(overlay);
 	}
 	
 	
@@ -36,7 +40,7 @@ public class ScreenEffectController extends Node2D{
 		if(currentEffect != null)
 		{
 			updateEffect(delta);
-			
+			overlay.setColor(currentColor);
 			
 		}
 		else
@@ -62,7 +66,8 @@ public class ScreenEffectController extends Node2D{
 		
 		previousColor.set(currentColor.cpy());
 		nextColor.set(effect.getColor().cpy());
-		
+		this.setVisible(true);
+		overlay.setColor(currentColor);
 	}
 
 	private void updateEffect(float delta) {
@@ -93,7 +98,7 @@ public class ScreenEffectController extends Node2D{
 			//done with the command, delete it
 			effectTimer=0f;
 			currentEffect = null; 
-			
+			this.setVisible(false);
 			
 		}
 		
@@ -106,8 +111,8 @@ public class ScreenEffectController extends Node2D{
 
 
 
-	ShapeRenderer shapeRenderer;
 	
+	/*
 	public void render() {
 		
 		
@@ -121,7 +126,7 @@ public class ScreenEffectController extends Node2D{
 		 
 		
 	}
-
+*/
 
 
 	public void forceScreenEffect(TintScreenEffect effect) {

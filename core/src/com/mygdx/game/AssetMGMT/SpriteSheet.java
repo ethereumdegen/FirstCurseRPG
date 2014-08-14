@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 public enum SpriteSheet {
 	
 	
-	BASICSHEET("sheets/basicsheet.png",16),
+	BASICSHEET("sheets/bitrpg.png",16),
 	UIPACKRPG("sheets/uipackrpg.png","sheets/uipackrpg.atlas"), 
 	ONSCREENCONTROLS("sheets/controls.png","sheets/controls.atlas")
 	

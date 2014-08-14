@@ -11,8 +11,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.mygdx.game.AssetMGMT.CommonSounds;
+import com.mygdx.game.AssetMGMT.UtilitySprites;
 import com.mygdx.game.GUI.battleinterface.InputHandler;
 import com.mygdx.game.GUI.battleinterface.Node2D;
+import com.mygdx.game.GUI.battleinterface.SimpleNinePatch;
 import com.mygdx.game.GUI.battleinterface.SimpleText;
 import com.mygdx.game.camera.CameraCommand;
 import com.mygdx.game.controller.InputActionManager.InputAction;
@@ -21,10 +23,10 @@ import com.mygdx.game.controller.InputActionManager.InputAction;
 public class DialogController extends Node2D implements InputHandler{
 
 	private SimpleText text;
-	
+	private SimpleNinePatch background;
 	
 	List<DialogInfo> queuedInfo = new ArrayList<DialogInfo>();
-	GUIShape background = new GUIShape();
+	//GUIShape background = new GUIShape();
 	
 	public DialogController()
 	{
@@ -32,7 +34,7 @@ public class DialogController extends Node2D implements InputHandler{
 		text = new SimpleText();
 		text.setTranslation(140, 90, 1);
     
-        
+		 background = new SimpleNinePatch(UtilitySprites.GRAYBACKGROUND.getTextureRegion());
         
        this.attachChild(text);
        

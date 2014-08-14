@@ -27,6 +27,9 @@ import com.mygdx.game.abilities.AbilityExecutionInfo;
 import com.mygdx.game.abilities.AbilityType;
 import com.mygdx.game.abilities.EditUnitStatEffect;
 import com.mygdx.game.abilities.EffectTargets;
+import com.mygdx.game.abilities.PlaySoundEffect;
+import com.mygdx.game.abilities.UnitAnimationEffect;
+import com.mygdx.game.abilities.UnitManeuverEffect;
 import com.mygdx.game.audio.MusicController;
 import com.mygdx.game.audio.MusicalEmotion;
 import com.mygdx.game.controller.Player;
@@ -236,7 +239,29 @@ public class BattleController {
 			
 			
 		}
+		if(effect instanceof PlaySoundEffect)			
+		{
+			
+			PlaySoundEffect soundEffect = ((PlaySoundEffect)effect);
+			
+			soundEffect.getSound().play(soundEffect.getVolume());
+		}
 		
+		if(effect instanceof UnitAnimationEffect)			
+		{
+			UnitAnimationEffect animEffect = (UnitAnimationEffect) effect;
+			
+			for(Unit target :  getTargets(info,effect)){
+				target.playAnimation(animEffect.getType());
+			}
+		}
+
+		if(effect instanceof UnitManeuverEffect)			
+		{
+			UnitManeuverEffect maneuver = (UnitManeuverEffect) effect;
+			info.getCaster().beginManeuver(maneuver.getType(), getTargets(info,effect));
+			
+		}
 		
 	}
 

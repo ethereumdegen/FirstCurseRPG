@@ -1,17 +1,17 @@
-package com.mygdx.game.AssetMGMT;
+package com.mygdx.game.entities;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.abilities.UnitManeuverEffect.UnitManeuverType;
 import com.mygdx.game.controller.Player;
-import com.mygdx.game.entities.WorldSprite;
 import com.mygdx.game.renderer.GraphSprite;
 import com.mygdx.game.screens.GameScreen;
 import com.mygdx.game.screens.GameState;
 import com.mygdx.game.utility.TileCoordinate;
 
-public class BattleUnitModel extends WorldSprite{
+public class BattleUnitModel extends UnitModel{
 
 	
 	
@@ -23,38 +23,21 @@ public class BattleUnitModel extends WorldSprite{
 	}
 	
 	
-	public enum UnitModelAnimation
-	{		
-		DEATH
-	}
-
-
-	public void playAnimation(UnitModelAnimation anim) {
-		if(anim==UnitModelAnimation.DEATH)
-		{
-			tint = Color.BLACK.cpy();
-			
-		}
-		
-	}
-
-	Color tint = null;
+	
 	
 	public void draw(Color def, Matrix4 combined) {
 	
-		
-		spriteBatch.setColor(def); //unless there is a better color...
-		
-		if(tint!=null)
-		{
-			
-			spriteBatch.setColor(tint);
-		}
+		defaultTint = def;
 		
 		spriteBatch.setProjectionMatrix(combined);
 		
-		super.render();
+		sprite.setColor(Color.CYAN.cpy());
+		spriteBatch.setColor(Color.CYAN.cpy());
 		
+		if(isVisible())
+		{
+		super.render();
+		}
 		
 		
 	}
@@ -63,7 +46,7 @@ public class BattleUnitModel extends WorldSprite{
 	
 
 	public void update(float delta) {
-		
+		super.update(delta);
 		if(GameScreen.getState() == GameState.BATTLE)
 		{
 			
@@ -84,7 +67,10 @@ public class BattleUnitModel extends WorldSprite{
 		
 		
 	}
-	
+
+
+
+
 	
 
 }

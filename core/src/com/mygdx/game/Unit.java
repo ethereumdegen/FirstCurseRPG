@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 import com.badlogic.gdx.ApplicationListener;
@@ -11,16 +13,18 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.AssetMGMT.BattleUnitModel;
 import com.mygdx.game.AssetMGMT.CommonSounds;
-import com.mygdx.game.AssetMGMT.WorldUnitModel;
-import com.mygdx.game.AssetMGMT.WorldUnitModel.UnitModelAnimation;
 import com.mygdx.game.AssetMGMT.UnitModelType;
 import com.mygdx.game.AssetMGMT.UnitType;
+import com.mygdx.game.abilities.UnitManeuverEffect.UnitManeuverType;
 import com.mygdx.game.controller.Player;
+import com.mygdx.game.entities.BattleUnitModel;
 import com.mygdx.game.entities.Spatial;
+import com.mygdx.game.entities.UnitModelAnimation;
+import com.mygdx.game.entities.WorldUnitModel;
 import com.mygdx.game.screens.GameScreen;
 import com.mygdx.game.screens.GameState;
+import com.mygdx.game.utility.ObjectListener;
 import com.mygdx.game.utility.TileCoordinate;
 import com.mygdx.game.utility.UnitStatDefinition;
 
@@ -192,10 +196,21 @@ public class Unit implements ApplicationListener{
 		
 	}
 
+	
+	
 	private void die() {
 		System.out.println(this + "just died!!");
-		alive= false;
-		model.playAnimation(UnitModelAnimation.DEATH);
+		
+		getBattleModel().queueAnimation(UnitModelAnimation.DEATH,
+				new ObjectListener(){
+					
+					@Override
+					public void actionPerformed(Object o) {
+						alive=false;
+						getBattleModel().setVisible(false);
+						getWorldModel().setVisible(false);
+					}
+		});
 		
 	}
 
@@ -214,6 +229,15 @@ public class Unit implements ApplicationListener{
 	public boolean isAlive() {
 		
 		return alive;
+	}
+
+	public void playAnimation(UnitModelAnimation anim) {
+		getBattleModel().queueAnimation(anim, null);
+
+	}
+
+	public void beginManeuver(UnitManeuverType maneuver, Unit[] targets) {
+		getBattleModel().beginManeuver(maneuver, targets);
 	}
 
 	

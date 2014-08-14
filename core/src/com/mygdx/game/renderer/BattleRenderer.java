@@ -88,7 +88,7 @@ public class BattleRenderer {
 	
 	static final Color DEFAULT_ENVIRONMENT_COLOR = new Color(0.5f, 1f, 0.8f, 1f);
 	
-	Color unitColor = new Color(1f, 1f, 1f, 1f);
+	Color unitColor = new Color(0.8f, 0.6f, 0.3f, 1f);
 	
 	TransitionalColor terrainColor = new TransitionalColor(0.5f, 1f, 0.8f, 1f);	
 

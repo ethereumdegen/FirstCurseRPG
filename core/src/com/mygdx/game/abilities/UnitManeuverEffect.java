@@ -5,7 +5,6 @@ import com.mygdx.game.UnitStats;
 public class UnitManeuverEffect extends AbilityEffect{
 
 	
-	EffectTargets targets;
 	UnitStats stat;
 	UnitManeuverType type;
 	
@@ -20,6 +19,12 @@ public class UnitManeuverEffect extends AbilityEffect{
 	{
 		RUSH	
 		
+	}
+
+
+
+	public UnitManeuverType getType() {
+		return type;
 	}
 	
 	

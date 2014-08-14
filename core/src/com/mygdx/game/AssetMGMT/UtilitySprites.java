@@ -13,7 +13,7 @@ public enum UtilitySprites {
 	
 	B("B",SpriteSheet.ONSCREENCONTROLS,"B"),
 	
-	
+	GRAYBACKGROUND("gray background",SpriteSheet.UIPACKRPG,"panel_blue"),
 	
 	
 	;

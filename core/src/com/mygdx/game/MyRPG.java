@@ -22,14 +22,9 @@ public class MyRPG extends Game {
 		onMobile = Gdx.app.getType().equals(ApplicationType.Android) || Gdx.app.getType().equals(ApplicationType.iOS);
 		//onMobile = true; //testing
 		
-		
-		
 		AssetCenter.init();
-		
-		
-		
-		setScreen(new GameScreen());
-		
+				
+		setScreen(new GameScreen());		
 	}
 
 
