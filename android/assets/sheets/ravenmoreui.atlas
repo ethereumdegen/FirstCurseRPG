@@ -1,0 +1,33 @@
+
+ravenmoreui.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+dialogpanel
+  rotate: false
+  xy: 1, 32
+  size: 288, 177
+  orig: 288, 177
+  offset: 0, 0
+  index: -1
+titlepanel
+  rotate: false
+  xy: 291, 118
+  size: 326, 91
+  orig: 326, 91
+  offset: 0, 0
+  index: -1
+progressbar
+  rotate: false
+  xy: 1, 1
+  size: 201, 29
+  orig: 201, 29
+  offset: 0, 0
+  index: -1
+bluebar
+  rotate: false
+  xy: 291, 101
+  size: 117, 15
+  orig: 117, 15
+  offset: 0, 0
+  index: -1

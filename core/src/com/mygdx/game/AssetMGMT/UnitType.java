@@ -16,7 +16,7 @@ public enum UnitType {
 			
 	}),
 	FIELDMOUSE("fieldmouse",UnitModelType.MOUSE, new UnitStatDefinition[]{
-			new UnitStatDefinition(UnitStats.HEALTH, 5)
+			new UnitStatDefinition(UnitStats.HEALTH, 22)
 			
 	}),
 	

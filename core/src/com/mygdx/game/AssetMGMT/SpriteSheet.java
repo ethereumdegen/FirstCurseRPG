@@ -17,8 +17,8 @@ public enum SpriteSheet {
 	
 	BASICSHEET("sheets/bitrpg.png",16),
 	UIPACKRPG("sheets/uipackrpg.png","sheets/uipackrpg.atlas"), 
-	ONSCREENCONTROLS("sheets/controls.png","sheets/controls.atlas")
-	
+	ONSCREENCONTROLS("sheets/controls.png","sheets/controls.atlas"),
+	RAVENMORE("sheets/ravenmoreui.png","sheets/ravenmoreui.atlas")
 	
 	;	
 	

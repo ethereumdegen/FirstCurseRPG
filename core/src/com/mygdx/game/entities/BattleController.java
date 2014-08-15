@@ -1,43 +1,30 @@
 package com.mygdx.game.entities;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Unit;
 import com.mygdx.game.AssetMGMT.AssetCenter;
 import com.mygdx.game.AssetMGMT.MapRegion;
-import com.mygdx.game.AssetMGMT.UnitModelType;
-import com.mygdx.game.AssetMGMT.UnitType;
 import com.mygdx.game.abilities.AbilityEffect;
 import com.mygdx.game.abilities.AbilityExecutionInfo;
+import com.mygdx.game.abilities.AbilityStats;
 import com.mygdx.game.abilities.AbilityType;
 import com.mygdx.game.abilities.EditUnitStatEffect;
 import com.mygdx.game.abilities.EffectTargets;
 import com.mygdx.game.abilities.PlaySoundEffect;
 import com.mygdx.game.abilities.UnitAnimationEffect;
 import com.mygdx.game.abilities.UnitManeuverEffect;
-import com.mygdx.game.audio.MusicController;
 import com.mygdx.game.audio.MusicalEmotion;
+import com.mygdx.game.battle.AIController;
 import com.mygdx.game.controller.Player;
-import com.mygdx.game.renderer.ScreenEffect;
 import com.mygdx.game.renderer.TintScreenEffect;
 import com.mygdx.game.screens.GameScreen;
-import com.mygdx.game.screens.GameState;
-import com.mygdx.game.utility.TileCoordinate;
 
 
 
@@ -48,6 +35,9 @@ public class BattleController {
 	
 	//List<Unit> units = new ArrayList<Unit>();
 	//List<MapRegion> regions = new ArrayList<MapRegion>();
+	
+	AIController enemyAIController;
+	
 	MapRegion unitPositions[][] = new MapRegion[2][3];
 	
 	Unit units[][] = new Unit[2][3];
@@ -63,6 +53,8 @@ public class BattleController {
 		
 		loadRegions();
 		
+		
+		enemyAIController = new AIController(this);
 	}
 	
 	
@@ -114,13 +106,13 @@ public class BattleController {
 	
 
 	public void initBattle() {
-		
+		enemyAIController.initBattle();
 		
 		GameScreen.getBattleRenderer().initBattle();
 		GameScreen.getGUIController().getBattleInterfaceController().initBattle();
 		
 		GameScreen.getGUIController().getScreenEffectManager().forceScreenEffect( new TintScreenEffect(Color.BLACK) );		
-		GameScreen.getGUIController().getScreenEffectManager().queueScreenEffect(new TintScreenEffect(Color.CLEAR,4));
+		GameScreen.getGUIController().getScreenEffectManager().queueScreenEffect(new TintScreenEffect(Color.CLEAR,1));
 						
 		GameScreen.getMusicController().setMusicalEmotion(MusicalEmotion.BATTLE);
 		
@@ -165,12 +157,13 @@ public class BattleController {
 			{
 				if(units[team][unit]!=null)
 				{
+				units[team][unit].update(delta);
 				units[team][unit].getBattleModel().update(delta);
 				}
 			}
 		}
 		
-		
+		enemyAIController.update(delta);
 	}
 	
 	public boolean battleIsOver()
@@ -226,15 +219,20 @@ public class BattleController {
 		for(AbilityEffect effect : type.getEffects()){
 				executeAbilityEffect(info, effect);
 		}
+		
+		info.getCaster().resetCooldown(info.getType().getStatValue(AbilityStats.COOLDOWN));
+		
 	}
 
 	public void executeAbilityEffect(AbilityExecutionInfo info, AbilityEffect effect) {
 		
 		if(effect instanceof EditUnitStatEffect)			
 		{
+			
+			
 			EditUnitStatEffect stateffect = (EditUnitStatEffect) effect;
 			for(Unit target :  getTargets(info,effect)){
-				target.editStatValue(stateffect.getStat(),stateffect.getDelta());
+				target.queueStatValueEdit(stateffect.getStat(),stateffect.getDelta(),stateffect.getDelay());
 			}
 			
 			
@@ -244,22 +242,24 @@ public class BattleController {
 			
 			PlaySoundEffect soundEffect = ((PlaySoundEffect)effect);
 			
-			soundEffect.getSound().play(soundEffect.getVolume());
+			
+			GameScreen.getSoundManager().queueSound(soundEffect.getSound(),soundEffect.getVolume(),effect.getDelay());
+			//soundEffect.getSound().play(soundEffect.getVolume());
 		}
 		
-		if(effect instanceof UnitAnimationEffect)			
+		if(effect instanceof UnitAnimationEffect)
 		{
 			UnitAnimationEffect animEffect = (UnitAnimationEffect) effect;
 			
 			for(Unit target :  getTargets(info,effect)){
-				target.playAnimation(animEffect.getType());
+				target.playAnimation(animEffect.getType(), effect.getDelay());
 			}
 		}
 
 		if(effect instanceof UnitManeuverEffect)			
 		{
 			UnitManeuverEffect maneuver = (UnitManeuverEffect) effect;
-			info.getCaster().beginManeuver(maneuver.getType(), getTargets(info,effect));
+			info.getCaster().beginManeuver(maneuver.getType(), maneuver.getInterpolation(), getTargets(info,effect), effect.getDelay());
 			
 		}
 		

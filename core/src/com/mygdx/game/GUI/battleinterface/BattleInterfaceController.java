@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.mygdx.game.Unit;
 import com.mygdx.game.AssetMGMT.CommonSounds;
 import com.mygdx.game.AssetMGMT.UtilitySprites;
 import com.mygdx.game.GUI.GUIShape;
@@ -35,8 +36,6 @@ public class BattleInterfaceController extends Node2D implements InputHandler,Ba
 	UnitActionsScreen unitActionScreen = new UnitActionsScreen();
 	UnitAttacksScreen unitAttacksScreen = new UnitAttacksScreen();
 		
-	
-	
 	
 	
 	public BattleInterfaceController()
@@ -80,11 +79,7 @@ public class BattleInterfaceController extends Node2D implements InputHandler,Ba
 		this.setVisible(true);
 		
 		
-		unitActionScreen.setVisible(true);
-		unitAttacksScreen.setVisible(false);
 		
-		
-		unitActionScreen.setActive(true);
 		
 	}
 	
@@ -157,8 +152,8 @@ public class BattleInterfaceController extends Node2D implements InputHandler,Ba
 			UnitActions action = (UnitActions) option;
 			switch(action)
 			{
-			case ATTACK: showAttackScreen(); break;				
-			case CHOOSETARGET: showTargetScreen(); break;
+			case ATTACK: menuOpen = CurrentMenuOpen.ATTACKSCREEN; break;				
+			case CHOOSETARGET: menuOpen = CurrentMenuOpen.TARGETSCREEN; break;
 			case EXECUTEABILITY: assertUnitAbility(); break;
 			}
 			
@@ -191,46 +186,104 @@ public class BattleInterfaceController extends Node2D implements InputHandler,Ba
 		}
 		
 		
-		centerNode.detachChild(unitAttacksScreen);
 		
-		targetSelectScreen.setActive(false);
-		unitAttacksScreen.setActive(false);
-		unitActionScreen.setActive(false);
+		menuOpen = CurrentMenuOpen.NONE;
 		
-		checkForCooledDownPartyMembers();
+		unitCurrentlyCasting = null;
+		
+		
 	}
 
 
-	private void checkForCooledDownPartyMembers() {
+
+
+	public void update(float delta){
+		super.update(delta);
 		
-		
-		//if a member is ready...
-	//	unitActionScreen.setActive(true);
-		//centerNode.attachChild(unitActionScreen);
+		pollUnitCooldowns();
+		updateMenuStates();
 	}
 
 
-	private void showTargetScreen() {
+	private void updateMenuStates() {
+		switch(menuOpen)
+		{
+		case ACTIONSCREEN:
+			unitActionScreen.setVisible(true);
+			unitAttacksScreen.setVisible(false);
+			targetSelectScreen.setVisible(true);
+			unitAttacksScreen.setActive(false);
+			unitActionScreen.setActive(true);
+			break;
+		case ATTACKSCREEN:
+			unitActionScreen.setVisible(false);
+			unitAttacksScreen.setVisible(true);
+			targetSelectScreen.setVisible(true);
+			targetSelectScreen.setVisible(true);
+			unitActionScreen.setActive(false);
+			unitAttacksScreen.setActive(true);
+			break;
+		case TARGETSCREEN:
+			unitActionScreen.setVisible(false);
+			//unitAttacksScreen.setVisible(false);
+			targetSelectScreen.setVisible(true);
+			unitAttacksScreen.setActive(false);
+			unitActionScreen.setActive(false);
+			targetSelectScreen.setActive(true);
+			break;
+		case NONE:
+			unitAttacksScreen.setVisible(false);
+			
+			targetSelectScreen.setActive(false);
+			unitAttacksScreen.setActive(false);
+			unitActionScreen.setActive(false);
+			break;
+		}
 		
-		unitActionScreen.setActive(false);
-		unitAttacksScreen.setActive(false);
-		targetSelectScreen.setActive(true);
+		
 	}
 
 
-	private void showAttackScreen() {
-		unitActionScreen.setVisible(false);
-		unitAttacksScreen.setVisible(true);
+	private void pollUnitCooldowns() {
 		
+		if(waitingForCooldowns())
+		{
+			for(Unit unit : GameScreen.getBattle().getUnits()[0])
+			{
+				if(unit!=null && unit.cooldownFinished())
+				{
+					
+					showActionMenusForUnit(unit);
+				}
+			}
+		}
 		
-		unitActionScreen.setActive(false);
-		unitAttacksScreen.setActive(true);
 	}
 
+	private void showActionMenusForUnit(Unit unit) {
+		unitCurrentlyCasting = unit;
+		menuOpen= CurrentMenuOpen.ACTIONSCREEN;
+		
+	}
 
-	
+	public Unit getUnitCurrentlyCasting() {
+		return unitCurrentlyCasting;
+	}
 
+	CurrentMenuOpen menuOpen = CurrentMenuOpen.NONE;
+	Unit unitCurrentlyCasting = null;
+	private boolean waitingForCooldowns() {
+		
+		return unitCurrentlyCasting == null;
+	}
 
-	
+	enum CurrentMenuOpen
+	{
+		NONE,
+		ACTIONSCREEN,
+		ATTACKSCREEN,
+		TARGETSCREEN
+		
+	}
 
 }

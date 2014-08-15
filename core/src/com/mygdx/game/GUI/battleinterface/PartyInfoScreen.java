@@ -11,7 +11,7 @@ public class PartyInfoScreen extends Node2D implements InputHandler{
 
 	
 	private SimpleText vitals[][] = new SimpleText[3][3];
-	
+	private ProgressBar[] bars = new ProgressBar[3];
 	
 	
 	
@@ -25,13 +25,10 @@ public class PartyInfoScreen extends Node2D implements InputHandler{
 	
 	PartyInfoScreen()
 	{
-		
-		
-		
-		
-		
-		for(int unit = UNIT_1; unit < UNIT_3; unit++)
+				
+		for(int unit = UNIT_1; unit <= UNIT_3; unit++)
 		{
+			
 			vitals[unit][NAME] = new SimpleText();
 			vitals[unit][NAME].setTranslation(0,90 - unit*25,10);
 			this.attachChild(vitals[unit][NAME]);
@@ -42,8 +39,13 @@ public class PartyInfoScreen extends Node2D implements InputHandler{
 			
 			vitals[unit][SP] = new SimpleText();
 			vitals[unit][SP].setTranslation(140,90 - unit*25,10);	
-			this.attachChild(vitals[unit][SP]);			
+			this.attachChild(vitals[unit][SP]);		
 			
+			
+			bars[unit] = new ProgressBar();
+			bars[unit].setTranslation(180,75 - unit*25,10);	
+			this.attachChild(bars[unit]);
+			 
 		}
 		
 		
@@ -55,8 +57,9 @@ public class PartyInfoScreen extends Node2D implements InputHandler{
 	public void update(float millis) {
 		
 		
-		 for(int unit = UNIT_1; unit < UNIT_3; unit++)
+		 for(int unit = UNIT_1; unit <= UNIT_3; unit++)
 			{
+			 
 			 if(GameScreen.getBattle().getUnits()[0][unit]!=null)
 			 {
 				 	vitals[unit][NAME].setText(GameScreen.getBattle().getUnits()[0][unit].getName());
@@ -64,8 +67,15 @@ public class PartyInfoScreen extends Node2D implements InputHandler{
 				 	vitals[unit][HP].setText(""+GameScreen.getBattle().getUnits()[0][unit].getStatValue(UnitStats.HEALTH));
 		
 				 	vitals[unit][SP].setText(""+GameScreen.getBattle().getUnits()[0][unit].getStatValue(UnitStats.SPECIAL));
-		 
+				 	
+				 	bars[unit].setProgress(GameScreen.getBattle().getUnits()[0][unit].getCooldownProgress());
+				 	 bars[unit].setVisible(true);
+			 }else{
+				 bars[unit].setVisible(false);
 			 }
+			 
+			 
+			 
 			}
 		
 	}

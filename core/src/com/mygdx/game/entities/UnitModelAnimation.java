@@ -18,4 +18,5 @@ public enum UnitModelAnimation {
 	public float getPlayTime() {
 		return playTime;
 	}
+
 }

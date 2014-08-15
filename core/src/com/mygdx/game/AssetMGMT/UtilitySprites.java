@@ -15,6 +15,11 @@ public enum UtilitySprites {
 	
 	GRAYBACKGROUND("gray background",SpriteSheet.UIPACKRPG,"panel_blue"),
 	
+	RPGBACKGROUND("gray background",SpriteSheet.RAVENMORE,"dialogpanel"),
+	
+	PROGRESSBACKGROUND("progress background", SpriteSheet.RAVENMORE,"progressbar"),
+	
+	PROGRESSBAR("progress bar", SpriteSheet.RAVENMORE,"bluebar"),
 	
 	;
 	

@@ -18,10 +18,15 @@ public class AssetCenter {
 		
 		
 	manager = new AssetManager();
-	manager.load("sheets/basicsheet.png", Texture.class);
-	manager.load("sheets/uipackrpg.png", Texture.class);
-	manager.load("sheets/controls.png", Texture.class);
-	//manager.load("sheets/controls.png", Atlas.class);
+	
+	for(SpriteSheet sheet : SpriteSheet.values())
+	{
+		manager.load(sheet.getFilePath(), Texture.class);
+		
+		
+	}
+	
+
 	
 	manager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
 	manager.load("maps/untitled.tmx", TiledMap.class);

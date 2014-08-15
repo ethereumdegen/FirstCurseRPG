@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Unit;
 import com.mygdx.game.AssetMGMT.CommonSounds;
 import com.mygdx.game.abilities.UnitManeuverEffect.UnitManeuverType;
@@ -19,7 +21,7 @@ public class UnitModel extends WorldSprite{
 	
 	
 	
-	
+	float animationDelay = 0f;
 	float animationTimerGoal = 0f;
 	float animationTimer = 0f;
 	UnitModelAnimation currentAnimation;
@@ -29,8 +31,8 @@ public class UnitModel extends WorldSprite{
 	
 	List<QueuedAnimation> animationQueue =new ArrayList<QueuedAnimation>();
 
-	public void queueAnimation(UnitModelAnimation anim, ObjectListener animCompleteListener) {
-		animationQueue.add(new QueuedAnimation(anim,animCompleteListener));	
+	public void queueAnimation(UnitModelAnimation anim, ObjectListener animCompleteListener, float delay) {
+		animationQueue.add(new QueuedAnimation(anim,animCompleteListener,delay));	
 		
 	}
 	
@@ -38,6 +40,7 @@ public class UnitModel extends WorldSprite{
 		UnitModelAnimation anim = queuedAnim.getAnimation();
 		ObjectListener animCompleteListener = queuedAnim.getListener();
 		
+		animationDelay = queuedAnim.getDelay();
 		animationTimerGoal = anim.getPlayTime();
 		animationTimer = 0f;
 		this.animCompleteListener=animCompleteListener;
@@ -74,6 +77,8 @@ public class UnitModel extends WorldSprite{
 
 		pollAnimations(delta);
 		
+		pollManeuvers(delta);
+		
 	}
 	
 	
@@ -98,13 +103,17 @@ public class UnitModel extends WorldSprite{
 
 	private void pollAnimations(float delta) {
 		
-		if(animationTimerGoal > 0)
+		if(animationTimerGoal > 0f)
 		{
 			
 			
 			animationTimer+=delta;
 			
-			float progress = animationTimer / animationTimerGoal;
+			if(animationTimer < animationDelay)
+				return;
+			
+			
+			float progress = (animationTimer-animationDelay) / animationTimerGoal;
 			
 			if(currentAnimation==UnitModelAnimation.DEATH)
 			{
@@ -119,7 +128,7 @@ public class UnitModel extends WorldSprite{
 			}
 			
 			
-			if(animationTimer >= animationTimerGoal )
+			if(animationTimer-animationDelay >= animationTimerGoal )
 			{
 				
 				endAnimation();
@@ -141,6 +150,8 @@ public class UnitModel extends WorldSprite{
 		animationTimerGoal = 0f;
 		animationTimer = 0f;
 		
+		tint = previousTint.cpy();
+		
 		if(animCompleteListener!=null)
 		{
 		animCompleteListener.actionPerformed(currentAnimation );
@@ -149,23 +160,119 @@ public class UnitModel extends WorldSprite{
 		
 	}
 	
+	float maneuverDelay = 0f;
+	float maneuverTimerGoal = 0f;
+	float maneuverTimer = 0f;
+	UnitManeuverType currentManeuver;
+	Vector2 originalPosition;
+	Vector2 targetPosition;
+	Unit[] currentManeuverTargets;
+	Interpolation currentInterpolation = Interpolation.linear;
 	
-
-	public void beginManeuver(UnitManeuverType maneuver, Unit[] targets) {
+	private void pollManeuvers(float delta) {
+		if(maneuverTimerGoal > 0f)
+		{
+			maneuverTimer+=delta;
+			
+			if(maneuverTimer < maneuverDelay)
+				return;
+			
+			
+			float progress = (maneuverTimer-maneuverDelay) / maneuverTimerGoal;
+			
+			progress = 1f - Math.abs(progress*2 - 1f );
+			
+			
+			if(currentManeuver==UnitManeuverType.RUSH)
+			{
+				
+				//this.position.set(originalPosition.cpy().interpolate(targetPosition.cpy(), progress, Interpolation.swing));
+				this.position.set(originalPosition.cpy().interpolate(targetPosition.cpy(), progress, currentInterpolation ));
+				
+				
+			}
+			
+			
+			if(maneuverTimer-maneuverDelay >= maneuverTimerGoal )
+			{				
+				endManeuver();
+			}
+			
+		}
+		else
+		{
+			if(!maneuverQueue.isEmpty())
+			{
+				playManeuver(maneuverQueue.remove(0));
+			}
+		}
 		
 	}
 	
 	
-	class queuedManeuver
+	private void endManeuver() {
+		maneuverTimerGoal = 0f;
+		maneuverTimer = 0f;
+		this.position.set(battleSpot.cpy());
+	}
+
+	private void playManeuver(QueuedManeuver maneuver) {
+		maneuverDelay = maneuver.getDelay();
+		maneuverTimerGoal = maneuver.getManeuver().getPlayTime();
+		maneuverTimer = 0f;
+		currentManeuver = maneuver.getManeuver();
+		
+		originalPosition = this.getPosition().cpy();
+		targetPosition = maneuver.getTargets()[0].getBattleModel().getPosition().cpy();
+		currentInterpolation = maneuver.getInterpolation();
+	}
+
+
+
+
+
+	List<QueuedManeuver> maneuverQueue =new ArrayList<QueuedManeuver>();
+	public void beginManeuver(UnitManeuverType maneuver, Interpolation interpolation, Unit[] targets, float delay) {
+		maneuverQueue.add(new QueuedManeuver(maneuver,interpolation,targets,delay));		
+	}
+	
+	
+	class QueuedManeuver
 	{
 		
 		UnitManeuverType maneuver; 
 		Unit[] targets;
-		
-		
+		Interpolation interpolation;
+		float delay;
+	
+
+		QueuedManeuver(UnitManeuverType maneuver,Interpolation interpolation,Unit[] targets, float delay)
+		{
+			this.maneuver=maneuver;
+			this.targets=targets;
+			this.interpolation=interpolation;
+			this.delay=delay;
+		}
+
+		public Interpolation getInterpolation() {
+			return interpolation;
+		}
+
+		public UnitManeuverType getManeuver() {
+			return maneuver;
+		}
+
+
+		public Unit[] getTargets() {
+			return targets;
+		}
+
+		public float getDelay()
+		{
+			return delay;
+		}
 		
 	}
-	
 	
 	
 	
@@ -174,12 +281,13 @@ public class UnitModel extends WorldSprite{
 	{
 		UnitModelAnimation anim;
 		ObjectListener animCompleteListener;
+		float delay;
 		
-		QueuedAnimation(UnitModelAnimation anim,ObjectListener animCompleteListener)
+		QueuedAnimation(UnitModelAnimation anim,ObjectListener animCompleteListener, float delay)
 		{
 			this.anim=anim;
 			this.animCompleteListener=animCompleteListener;
-			
+			this.delay = delay;
 		}
 
 		public ObjectListener getListener() {
@@ -192,7 +300,10 @@ public class UnitModel extends WorldSprite{
 			return anim;
 		}
 		
-		
+		public float getDelay()
+		{
+			return delay;
+		}
 		
 		
 	}

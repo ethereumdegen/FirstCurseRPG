@@ -43,17 +43,17 @@ public class BattleUnitModel extends UnitModel{
 	}
 
 	
-	
+	GameState previousState;
 
 	public void update(float delta) {
 		super.update(delta);
-		if(GameScreen.getState() == GameState.BATTLE)
-		{
+		
+		if(GameScreen.getState()!=previousState){
+			if(GameScreen.getState() == GameState.BATTLE)
+			{
 			
 			this.position.set(battleSpot); //not always, but temporarily
 			
-			//TEMP
-			//setPosition(position.x, position.y);
 			getSprite().setRotation(rotationangle);
 			
 			
@@ -62,10 +62,10 @@ public class BattleUnitModel extends UnitModel{
 			
 			////battlesprite.setPosition(position.x, position.y);
 			//battlesprite.setRotation(rotationangle);
+			}
 		}
 		
-		
-		
+		previousState = GameScreen.getState();
 	}
 
 

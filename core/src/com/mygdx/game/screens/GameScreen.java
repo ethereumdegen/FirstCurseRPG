@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.mygdx.game.GUI.OnScreenControls;
 import com.mygdx.game.GUI.battleinterface.Node2D;
 import com.mygdx.game.audio.MusicController;
+import com.mygdx.game.audio.SoundManager;
 import com.mygdx.game.controller.InputActionManager;
 import com.mygdx.game.controller.InputActionManager.InputAction;
 import com.mygdx.game.controller.WorldController;
@@ -40,7 +41,7 @@ public class GameScreen implements Screen {
 	
 	static MusicController musicController;
 	
-
+	static SoundManager soundManager = new SoundManager();
 	
 	@Override
 	public void show() {
@@ -73,7 +74,7 @@ public class GameScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		
-
+		soundManager.update(delta);
 		controller.update(delta);
 		guicontroller.update(delta);
 		storycontroller.update(delta);
@@ -235,6 +236,11 @@ public class GameScreen implements Screen {
 
 	public static BattleRenderer getBattleRenderer() {
 		return battleRenderer;
+	}
+
+	public static SoundManager getSoundManager() {
+		
+		return soundManager;
 	}
 
 }
