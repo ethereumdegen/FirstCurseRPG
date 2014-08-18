@@ -13,7 +13,7 @@ import com.mygdx.game.entities.UnitModelAnimation;
 
 public enum AbilityType {
 	
-	SLASH( new AbilityStatDefinition[]{
+	Slash( new AbilityStatDefinition[]{
 			new AbilityStatDefinition(AbilityStats.SPECIALCOST,10),	
 			new AbilityStatDefinition(AbilityStats.COOLDOWN,5)			
 			},
@@ -25,18 +25,39 @@ public enum AbilityType {
 				new EditUnitStatEffect(UnitStats.HEALTH, -10, EffectTargets.TARGETENEMY).delay(0.9f),
 				new UnitAnimationEffect(UnitModelAnimation.DAMAGED, EffectTargets.TARGETENEMY).delay(0.5f),
 				new PlaySoundEffect(CommonSounds.DAMAGE.getSound(),0.5f).delay(0.5f)
-			}
+			},
 			
+			AbilityTargettingStyle.ENEMIES
 			
-			)
+			),
 			
+	BITE( new AbilityStatDefinition[]{
+				new AbilityStatDefinition(AbilityStats.SPECIALCOST,10),	
+				new AbilityStatDefinition(AbilityStats.COOLDOWN,5)			
+					},
+			
+					new AbilityEffect[]{
+									
+						new UnitManeuverEffect(UnitManeuverType.RUSH, Interpolation.pow2In, EffectTargets.TARGETENEMY),
+						
+						new EditUnitStatEffect(UnitStats.HEALTH, -5, EffectTargets.TARGETENEMY).delay(0.9f),
+						new UnitAnimationEffect(UnitModelAnimation.DAMAGED, EffectTargets.TARGETENEMY).delay(0.5f),
+						new PlaySoundEffect(CommonSounds.DAMAGE.getSound(),0.5f).delay(0.5f)
+					},
+					
+					AbilityTargettingStyle.ENEMIES
+					
+					),			
+					
 				
 	;
 	
 	HashMap<AbilityStats, Integer> statlist = new HashMap<AbilityStats, Integer>();
 	List<AbilityEffect> effects = new ArrayList<AbilityEffect>();
+	AbilityTargettingStyle targetStyle = AbilityTargettingStyle.ENEMIES;
 	
-	AbilityType(AbilityStatDefinition[] statdefinitions,AbilityEffect[] effects)
+	
+	AbilityType(AbilityStatDefinition[] statdefinitions,AbilityEffect[] effects,AbilityTargettingStyle targetStyle)
 	{
 		
 		for(AbilityStatDefinition def : statdefinitions)
@@ -49,7 +70,7 @@ public enum AbilityType {
 			this.effects.add(effect);
 		}
 		
-		
+		this.targetStyle=targetStyle;
 		
 	}
 
@@ -61,5 +82,10 @@ public enum AbilityType {
 	public List<AbilityEffect> getEffects() {
 		
 		return effects;
+	}
+
+	public AbilityTargettingStyle getTargettingStyle() {
+		
+		return targetStyle;
 	}
 }

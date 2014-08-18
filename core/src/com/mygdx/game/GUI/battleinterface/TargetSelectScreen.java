@@ -35,7 +35,7 @@ public class TargetSelectScreen extends OptionsScreen implements InputHandler{
 		for(int i = 0; i < 3 ;i++)
 		{
 			if(GameScreen.getBattle().getUnits()[1][i]!=null){
-				options[i] = GameScreen.getBattle().getUnits()[1][i].getName();
+				options[i] = GameScreen.getBattle().getUnits()[1][i];
 			}
 		}
 	

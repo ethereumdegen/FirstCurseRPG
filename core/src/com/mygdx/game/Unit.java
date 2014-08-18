@@ -9,23 +9,28 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.mygdx.game.AssetMGMT.UnitType;
+import com.mygdx.game.abilities.Ability;
+import com.mygdx.game.abilities.AbilityType;
+import com.mygdx.game.abilities.Executable;
 import com.mygdx.game.abilities.UnitManeuverEffect.UnitManeuverType;
 import com.mygdx.game.entities.BattleUnitModel;
 import com.mygdx.game.entities.UnitModelAnimation;
+import com.mygdx.game.entities.UnitOwner;
 import com.mygdx.game.entities.WorldUnitModel;
 import com.mygdx.game.utility.ObjectListener;
 import com.mygdx.game.utility.UnitStatDefinition;
 
-public class Unit implements ApplicationListener{
+public class Unit extends Executable implements ApplicationListener{
 	
 	
 	
-
+	Ability[] abilities = new Ability[10];
 	
 	
 	//Sprite worldsprite;
 	
-	BattleUnitModel battlemodel;
+	
+//	BattleUnitModel battlemodel;
 		
 	HashMap<UnitStats, Integer> statvalues = new HashMap<UnitStats, Integer>();
 	
@@ -34,22 +39,26 @@ public class Unit implements ApplicationListener{
 	float actionCooldownTotal = 5f;
 	float actionCooldown = 0f;
 	
-	public Unit(UnitType type) {
+	public Unit(UnitType type, UnitOwner owner) {
 		this.type = type;
+		this.owner=owner;
+		
+		abilities[0] = new Ability(AbilityType.Slash);
 		
 		texRegion = type.getModelType().getTextureRegion();
 		
 		model = new WorldUnitModel(texRegion);
-		battlemodel = new BattleUnitModel(texRegion);
+	
 		
 		//worldsprite = new Sprite(texRegion);
 		model.getSprite().setOrigin(0, 0);
 		model.getSprite().setScale(1/16f);
 		model.getSprite().setCenter(0.5f, 0.5f);
 		
+		/*	battlemodel = new BattleUnitModel(texRegion);
 		battlemodel.getSprite().setOrigin(0, 0);
 		battlemodel.getSprite().setScale(1/16f);
-		battlemodel.getSprite().setCenter(0.5f, 0.5f);
+		battlemodel.getSprite().setCenter(0.5f, 0.5f);*/
         
        loadBaseStats();
 	}
@@ -131,7 +140,10 @@ public class Unit implements ApplicationListener{
 		return texRegion;
 	}
 
-	
+	public Ability[] getAbilities() {
+		return abilities;
+	}
+
 
 	public Sprite getSprite() {
 		
@@ -175,11 +187,16 @@ public class Unit implements ApplicationListener{
 	{
 		if(isAlive())
 		{
-		pollStatEdits(delta);
+			
+			
+			
+			pollStatEdits(delta);		
 		
+			pollCooldown(delta);
 		
-		pollCooldown(delta);
 		}
+		
+		getWorldModel().update(delta);
 	}
 	
 
@@ -296,13 +313,12 @@ public class Unit implements ApplicationListener{
 	private void die() {
 		System.out.println(this + "just died!!");
 		
-		getBattleModel().queueAnimation(UnitModelAnimation.DEATH,
+		getWorldModel().queueAnimation(UnitModelAnimation.DEATH,
 				new ObjectListener(){
 					
 					@Override
 					public void actionPerformed(Object o) {
 						alive=false;
-						getBattleModel().setVisible(false);
 						getWorldModel().setVisible(false);
 					}
 		},
@@ -316,10 +332,7 @@ public class Unit implements ApplicationListener{
 		return model;
 	}
 	
-	public BattleUnitModel getBattleModel() {
-		
-		return battlemodel;
-	}
+	
 
 	
 	boolean alive = true;
@@ -329,12 +342,12 @@ public class Unit implements ApplicationListener{
 	}
 
 	public void playAnimation(UnitModelAnimation anim, float delay) {
-		getBattleModel().queueAnimation(anim, null, delay);
+		getWorldModel().queueAnimation(anim, null, delay);
 
 	}
 
 	public void beginManeuver(UnitManeuverType maneuver,Interpolation interpolation, Unit[] targets, float delay) {
-		getBattleModel().beginManeuver(maneuver, interpolation, targets,delay);
+		getWorldModel().beginManeuver(maneuver, interpolation, targets,delay);
 	}
 
 	public void resetCooldown(float cooldown) {
@@ -343,7 +356,19 @@ public class Unit implements ApplicationListener{
 		
 	}
 
+	UnitOwner owner;
+	public UnitOwner getOwner() {
+		return owner;
+	}
+	public void setOwner(UnitOwner owner)
+	{
+		this.owner=owner;
+	}
 	
-
+	@Override
+	public String getLabel()
+	{
+		return getName();
+	}
 	
 }

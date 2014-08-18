@@ -124,15 +124,7 @@ public class InputActionManager implements InputProcessor{
 			return false;
 		
 		
-		actionstate.put(InputAction.LEFT, false);
-		actionstate.put(InputAction.RIGHT, false);
-		actionstate.put(InputAction.UP, false);
-		actionstate.put(InputAction.DOWN, false);
-		actionstate.put(InputAction.FIRE, false);
-		actionstate.put(InputAction.JUMP, false);
-		
-		
-		
+		releaseKeys();
 				
 		return true;
 	}
@@ -162,6 +154,17 @@ public class InputActionManager implements InputProcessor{
 	public boolean mouseMoved(int screenX, int screenY) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+
+	public void releaseKeys() {
+		
+		actionstate.put(InputAction.LEFT, false);
+		actionstate.put(InputAction.RIGHT, false);
+		actionstate.put(InputAction.UP, false);
+		actionstate.put(InputAction.DOWN, false);
+		actionstate.put(InputAction.FIRE, false);
+		actionstate.put(InputAction.JUMP, false);
 	}
 	
 	

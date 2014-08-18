@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mygdx.game.AssetMGMT.UtilitySprites;
+import com.mygdx.game.abilities.Executable;
 import com.mygdx.game.controller.InputActionManager.InputAction;
 import com.mygdx.game.renderer.GraphSprite;
 
@@ -26,7 +27,7 @@ public class OptionsScreen extends Node2D implements InputHandler{
 	
 	
 
-	String[] options = new String[3];
+	Executable[] options = new Executable[3];
 	
 	
 	OptionsScreen()
@@ -59,7 +60,7 @@ public class OptionsScreen extends Node2D implements InputHandler{
 		
 		for(int i=0;i<optionLabels.length;i++){
 			if(options[i+optionOffset] != null){
-				optionLabels[i].setText(options[i+optionOffset]);
+				optionLabels[i].setText(options[i+optionOffset].getLabel());
 			}else{
 				optionLabels[i].setText("---");
 			}

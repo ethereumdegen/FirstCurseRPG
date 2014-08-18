@@ -1,9 +1,9 @@
 package com.mygdx.game.controller;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.mygdx.game.Unit;
 import com.mygdx.game.AssetMGMT.MapRegion;
 import com.mygdx.game.screens.GameScreen;
+import com.mygdx.game.screens.GameState;
 
 public class Player {
 	static Unit focus;
@@ -12,7 +12,8 @@ public class Player {
 	//static boolean cinematicMode = false;
 	
 	public static boolean isCinematicMode() {
-		return GameScreen.getGUIController().getDialogController().dialogIsActive();
+		return GameScreen.getGUIController().getDialogController().dialogIsActive()
+				|| GameScreen.getState() == GameState.BATTLE;
 	}
 
 	//public static void setCinematicMode(boolean cinematicMode) {

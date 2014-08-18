@@ -45,8 +45,9 @@ public enum CommonSounds {
 
 
 	public void play(float f) {
+		if(f > 0.05f){
 		getSound().play(f);
-		
+		}
 	}
 	
 	

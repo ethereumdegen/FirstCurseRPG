@@ -1,5 +1,6 @@
 package com.mygdx.game.GUI.battleinterface;
 
+import com.mygdx.game.abilities.Executable;
 import com.mygdx.game.controller.InputActionManager.InputAction;
 
 public class UnitActionsScreen extends OptionsScreen implements InputHandler{
@@ -16,12 +17,15 @@ public class UnitActionsScreen extends OptionsScreen implements InputHandler{
 	}
 	
 	
+	BattleInterfaceController battleInterfaceController;
 	
-	UnitActionsScreen()
+	UnitActionsScreen(BattleInterfaceController battleInterfaceController)
 	{			
 		super();
 		
-		options = new String[]{"Attack","Power","Item"};
+		this.battleInterfaceController=battleInterfaceController;
+		
+		options = new Executable[]{new Executable("Attack"),new Executable("Power"),new Executable("Item")};
 		
 		
 	}

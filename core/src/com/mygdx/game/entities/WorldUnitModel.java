@@ -46,6 +46,8 @@ public class WorldUnitModel extends UnitModel{
 	public void update(float delta) {
 		super.update(delta);
 		
+		
+		
 			velocity.add(acceleration);
 			
 			//only allow position to change in a direction if that way is unblocked!
@@ -70,13 +72,18 @@ public class WorldUnitModel extends UnitModel{
 			}
 			
 			if(!velocity.isZero()){
+				
 				movementcounter+= delta;
-				rotationangle = (float) Math.cos(movementcounter*10)*10;
+				
+				rotationangle = (float) Math.cos(movementcounter*10+Math.random())*10;
 				
 				if(stepsoundcounter < movementcounter * 3)
 				{
 					stepsoundcounter++;
-					float stepVol = (40 - position.dst(Player.getFocus().getWorldModel().getPosition())) / 100;			
+					float stepVol = (4000 - (float) Math.pow( position.dst(Player.getFocus().getWorldModel().getPosition()),3)) / 40000f;		
+					
+					
+					
 					CommonSounds.WALK.play(stepVol);
 				}
 			
@@ -91,6 +98,29 @@ public class WorldUnitModel extends UnitModel{
 			getSprite().setRotation(rotationangle);
 		
 		
+		
+	}
+
+	float roamTimerGoal = 1f;
+	float roamTimer = 0f;
+	public void updateAIRoaming(float delta) {
+		roamTimer+=delta;
+		
+		if(roamTimer > roamTimerGoal)
+		{
+			roamTimer=0f;
+			
+			
+			movespeed = 0.01f;
+			if(Math.random() < 0.1f){
+				setVelocity((float)(Math.random()-0.5f),(float)(Math.random()-0.5f));
+			}
+			else
+			{
+				setVelocity(0,0);
+			}
+			
+		}
 		
 	}
 	

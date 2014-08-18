@@ -17,6 +17,7 @@ import com.mygdx.game.entities.BattleController;
 import com.mygdx.game.entities.World;
 import com.mygdx.game.utility.TransitionalColor;
 
+@Deprecated
 public class BattleRenderer {
 
 	private static final float CAMERA_WIDTH = 10f;
@@ -149,7 +150,7 @@ public class BattleRenderer {
 				
 				if(battle.getUnits()[team][unit] != null && battle.getUnits()[team][unit].getSprite()!=null){
 					
-					battle.getUnits()[team][unit].getBattleModel().draw(unitColor, cam.combined );
+					battle.getUnits()[team][unit].getWorldModel().draw(unitColor, cam.combined );
 					
 				}
 				

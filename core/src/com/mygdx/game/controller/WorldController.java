@@ -43,7 +43,7 @@ public class WorldController implements InputHandler {
 		
 		for(Unit unit : world.getUnits())
 		{
-			unit.getWorldModel().update(delta);
+			unit.update(delta);
 		}
 		
 		updatePlayerRegion();
@@ -96,33 +96,37 @@ public class WorldController implements InputHandler {
 	/** Change Bob's state and parameters based on input controls **/
 	private void processActions() {
 		
-		if(Player.getFocus() != null && !Player.isCinematicMode() ){
+		if(Player.getFocus() != null  ){
 			Player.getFocus().setState(UnitState.IDLE);
 			// acceleration is 0 on the x
 			Player.getFocus().getWorldModel().getAcceleration().setZero();
 			// horizontal speed is 0
 			Player.getFocus().getWorldModel().getVelocity().setZero();
 			
+			if(!Player.isCinematicMode()){
 			
 		if (GameScreen.getInputActionManager().getActionState(InputAction.LEFT)) {
 			// left is pressed
 			
 			Player.getFocus().getWorldModel().getVelocity().x = -1;
 			
-		} if (GameScreen.getInputActionManager().getActionState(InputAction.RIGHT)) {
+		} 
+		if (GameScreen.getInputActionManager().getActionState(InputAction.RIGHT)) {
 			
 			Player.getFocus().getWorldModel().getVelocity().x = 1;
-		} if (GameScreen.getInputActionManager().getActionState(InputAction.UP)) {
+		} 
+		if (GameScreen.getInputActionManager().getActionState(InputAction.UP)) {
 		
 			Player.getFocus().getWorldModel().getVelocity().y = 1;
 			
-		} if (GameScreen.getInputActionManager().getActionState(InputAction.DOWN)) {
+		} 
+		if (GameScreen.getInputActionManager().getActionState(InputAction.DOWN)) {
 			
 			Player.getFocus().getWorldModel().getVelocity().y = -1;
 			
 		}
 			
-					
+			}
 		}
 		
 	}

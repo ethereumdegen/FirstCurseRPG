@@ -35,7 +35,7 @@ public class SimpleNinePatch extends Spatial{
 		if(active){
 		
 		spriteBatch.begin();
-		System.out.println(rect);
+		
 		patch.draw(spriteBatch, rect.x + this.getWorldTranslation().x ,rect.y + this.getWorldTranslation().y,rect.width,rect.height);
 		
 		

@@ -23,7 +23,7 @@ public class GameScreen implements Screen {
 
 	private static World 			world;
 	private static BattleController	battleController;
-	private static BattleRenderer   battleRenderer;
+	//private static BattleRenderer   battleRenderer;
 	private static WorldRenderer 	worldRenderer;
 	private static WorldController	controller;
 	
@@ -53,7 +53,7 @@ public class GameScreen implements Screen {
 		
 		
 		worldRenderer = new WorldRenderer(world, true);
-		battleRenderer = new BattleRenderer(battleController, true);
+		//battleRenderer = new BattleRenderer(battleController, true);
 		
 	
 		controller = new WorldController(world);
@@ -75,22 +75,18 @@ public class GameScreen implements Screen {
 		
 		
 		soundManager.update(delta);
-		controller.update(delta);
+		
 		guicontroller.update(delta);
 		storycontroller.update(delta);
 		battleController.update(delta);
 		
-		if(inOverworld())
-		{
+		
+		
 		worldRenderer.update(delta);		
 		worldRenderer.render();
-		}
-		else
-		{
-		battleRenderer.update(delta);		
-		battleRenderer.render();
+		controller.update(delta);
+		world.update(delta);
 		
-		}
 		
 		checkBattleState();
 		
@@ -117,10 +113,6 @@ public class GameScreen implements Screen {
 		
 	}
 
-	private boolean inOverworld() {
-		
-		return currentState == GameState.OVERWORLD;
-	}
 
 	@Override
 	public void resize(int width, int height) {
@@ -209,8 +201,10 @@ public class GameScreen implements Screen {
 	}
 
 	public static boolean processInputAction(InputAction action, boolean asserted) {
-
-		if(guicontroller.processInputAction(action,asserted))
+		
+	
+		
+		if(guicontroller.processInputAction(action,asserted) )
 		{
 			return true;
 		}
@@ -234,10 +228,7 @@ public class GameScreen implements Screen {
 		return guicontroller;
 	}
 
-	public static BattleRenderer getBattleRenderer() {
-		return battleRenderer;
-	}
-
+	
 	public static SoundManager getSoundManager() {
 		
 		return soundManager;

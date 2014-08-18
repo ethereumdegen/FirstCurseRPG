@@ -18,6 +18,7 @@ import com.mygdx.game.GUI.battleinterface.SimpleNinePatch;
 import com.mygdx.game.GUI.battleinterface.SimpleText;
 import com.mygdx.game.camera.CameraCommand;
 import com.mygdx.game.controller.InputActionManager.InputAction;
+import com.mygdx.game.screens.GameScreen;
 
 
 public class DialogController extends Node2D implements InputHandler{
@@ -69,6 +70,9 @@ public class DialogController extends Node2D implements InputHandler{
 		
 		if(lerpTotal > 0 && dialogIsActive())
 		{
+			
+			
+			
 			if(lerpCounter < lerpTotal)
 			{		 
 				lerpCounter+=delta;
@@ -149,6 +153,8 @@ public class DialogController extends Node2D implements InputHandler{
 			return; //wait until text is done...
 		}
 		
+		
+		
 		if(queuedInfo.isEmpty())
 		{
 			dialogIsActive = false;
@@ -157,6 +163,8 @@ public class DialogController extends Node2D implements InputHandler{
 		else
 		{			
 		
+		
+			
 		dialogIsActive = true;
 		
 		DialogInfo nextInfo = queuedInfo.remove(0);

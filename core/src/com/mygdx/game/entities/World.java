@@ -38,10 +38,15 @@ public class World {
 	List<MapRegion> regions = new ArrayList<MapRegion>();
 	
 	TiledMap map;
+	
+	
+	WorldAIController worldAIController;
 
 	public World() {
 		initWorld();
 		createDemoWorld();
+		
+		worldAIController = new WorldAIController(this);
 	}
 
 	private void initWorld() {
@@ -66,34 +71,12 @@ public class World {
 				for(MapObject obj: layer.getObjects())
 				{
 					
-					if(obj instanceof PolygonMapObject)
+					if(obj instanceof RectangleMapObject || obj instanceof PolygonMapObject)
 					{
-						PolygonMapObject poly = (PolygonMapObject) obj;
-						
-						Color tint = null;
-						
-						if( obj.getProperties().containsKey("tint"))
-						{
-							tint = Color.valueOf((String) obj.getProperties().get("tint"));
-						}
-						
-						regions.add(new MapRegion(obj.getName(),poly.getPolygon(),tint ));
+					
+					regions.add(new MapRegion(obj));
 					
 					}
-					
-				if(obj instanceof RectangleMapObject){
-					RectangleMapObject rect = (RectangleMapObject) obj;
-					
-					Color tint = null;
-					
-					if( obj.getProperties().containsKey("tint"))
-					{
-						tint = Color.valueOf((String) obj.getProperties().get("tint"));
-					}
-					
-					regions.add(
-						new MapRegion(obj.getName(),rect.getRectangle(),tint ));
-				}
 			
 				
 				}
@@ -121,7 +104,7 @@ public class World {
 							{
 								System.out.println("spawned player" + x +"."+ y);
 								UnitType type = UnitType.getFromString((String) cell.getTile().getProperties().get("unittype"));
-								Player.setFocus(spawnUnit(type,new TileCoordinate(x,y)));
+								Player.setFocus(spawnUnit(type,UnitOwner.PLAYER,new TileCoordinate(x,y)));
 								tilelayer.setCell(x, y, null);//delete the tile
 								
 								
@@ -129,7 +112,7 @@ public class World {
 							{
 								System.out.println("replaced monster" + x +"."+ y);
 								UnitType type = UnitType.getFromString((String) cell.getTile().getProperties().get("unittype"));
-								spawnUnit(type,new TileCoordinate(x,y));
+								spawnUnit(type,UnitOwner.ENEMY,new TileCoordinate(x,y));
 								tilelayer.setCell(x, y, null);//delete the tile
 								
 								
@@ -180,14 +163,14 @@ public class World {
 	}
 	
 
-	private Unit spawnUnit(UnitType type, TileCoordinate tileCoordinate) {
+	private Unit spawnUnit(UnitType type, UnitOwner owner, TileCoordinate tileCoordinate) {
 		
-		return spawnUnit(type, tileCoordinate.getPos());
+		return spawnUnit(type, owner, tileCoordinate.getPos());
 	}
 
 	
-	private Unit spawnUnit(UnitType type,Vector2 pos) {
-		Unit unit = new Unit(type);
+	private Unit spawnUnit(UnitType type, UnitOwner owner, Vector2 pos) {
+		Unit unit = new Unit(type,owner);
 		unit.getWorldModel().setPosition(pos.x,pos.y);
 		units.add(unit);
 		System.out.println("SPAWNING ");
@@ -235,6 +218,13 @@ public class World {
 		}
 		
 		return null;
+	}
+	
+	
+	public void update(float delta)
+	{
+		worldAIController.update(delta);
+		
 	}
 
 	

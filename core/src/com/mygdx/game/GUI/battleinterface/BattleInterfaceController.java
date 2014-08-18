@@ -13,6 +13,7 @@ import com.mygdx.game.AssetMGMT.UtilitySprites;
 import com.mygdx.game.GUI.GUIShape;
 import com.mygdx.game.GUI.battleinterface.UnitActionsScreen.UnitActions;
 import com.mygdx.game.abilities.AbilityExecutionInfo;
+import com.mygdx.game.abilities.AbilityTargettingStyle;
 import com.mygdx.game.abilities.AbilityType;
 import com.mygdx.game.controller.InputActionManager.InputAction;
 import com.mygdx.game.entities.Spatial;
@@ -33,13 +34,15 @@ public class BattleInterfaceController extends Node2D implements InputHandler,Ba
 	PartyInfoScreen partyInfoScreen = new PartyInfoScreen();
 	
 	TargetSelectScreen targetSelectScreen = new TargetSelectScreen();
-	UnitActionsScreen unitActionScreen = new UnitActionsScreen();
-	UnitAttacksScreen unitAttacksScreen = new UnitAttacksScreen();
+	UnitActionsScreen unitActionScreen;
+	UnitAttacksScreen unitAttacksScreen;
 		
 	
 	
 	public BattleInterfaceController()
 	{
+		unitAttacksScreen = new UnitAttacksScreen(this);
+		unitActionScreen = new UnitActionsScreen(this);
 		
 		 background = new SimpleNinePatch(UtilitySprites.GRAYBACKGROUND.getTextureRegion());
 		
@@ -153,7 +156,7 @@ public class BattleInterfaceController extends Node2D implements InputHandler,Ba
 			switch(action)
 			{
 			case ATTACK: menuOpen = CurrentMenuOpen.ATTACKSCREEN; break;				
-			case CHOOSETARGET: menuOpen = CurrentMenuOpen.TARGETSCREEN; break;
+			case CHOOSETARGET: activateUnitTargetting(); break;
 			case EXECUTEABILITY: assertUnitAbility(); break;
 			}
 			
@@ -167,6 +170,21 @@ public class BattleInterfaceController extends Node2D implements InputHandler,Ba
 
 
 	
+	private void activateUnitTargetting() {
+		
+		
+		if(unitAttacksScreen.getSelectedAbility().getType().getTargettingStyle() == AbilityTargettingStyle.ALLIES)
+		{
+			menuOpen = CurrentMenuOpen.ALLYTARGETSCREEN;
+		}
+		
+		if(unitAttacksScreen.getSelectedAbility().getType().getTargettingStyle() == AbilityTargettingStyle.ENEMIES)
+		{
+			menuOpen = CurrentMenuOpen.ENEMYTARGETSCREEN;
+		}
+	}
+
+
 	private void assertUnitAbility() {
 		System.out.println("executing ability!");
 		
@@ -179,7 +197,7 @@ public class BattleInterfaceController extends Node2D implements InputHandler,Ba
 			System.out.println(attackTypeIndex +":" + victimIndex);
 			
 			AbilityExecutionInfo info = new AbilityExecutionInfo(GameScreen.getBattle().getUnits()[0][0],
-					GameScreen.getBattle().getUnits()[1][0], AbilityType.SLASH );  //testing
+					GameScreen.getBattle().getUnits()[1][0], AbilityType.Slash );  //testing
 			
 			
 			GameScreen.getBattle().executeUnitAbility(info );
@@ -214,6 +232,7 @@ public class BattleInterfaceController extends Node2D implements InputHandler,Ba
 			targetSelectScreen.setVisible(true);
 			unitAttacksScreen.setActive(false);
 			unitActionScreen.setActive(true);
+			targetSelectScreen.setActive(false);
 			break;
 		case ATTACKSCREEN:
 			unitActionScreen.setVisible(false);
@@ -222,8 +241,9 @@ public class BattleInterfaceController extends Node2D implements InputHandler,Ba
 			targetSelectScreen.setVisible(true);
 			unitActionScreen.setActive(false);
 			unitAttacksScreen.setActive(true);
+			targetSelectScreen.setActive(false);
 			break;
-		case TARGETSCREEN:
+		case ENEMYTARGETSCREEN:
 			unitActionScreen.setVisible(false);
 			//unitAttacksScreen.setVisible(false);
 			targetSelectScreen.setVisible(true);
@@ -282,7 +302,8 @@ public class BattleInterfaceController extends Node2D implements InputHandler,Ba
 		NONE,
 		ACTIONSCREEN,
 		ATTACKSCREEN,
-		TARGETSCREEN
+		ENEMYTARGETSCREEN,
+		ALLYTARGETSCREEN
 		
 	}
 

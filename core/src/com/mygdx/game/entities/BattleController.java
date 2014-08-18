@@ -10,6 +10,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.Unit;
 import com.mygdx.game.AssetMGMT.AssetCenter;
+import com.mygdx.game.AssetMGMT.CommonSounds;
 import com.mygdx.game.AssetMGMT.MapRegion;
 import com.mygdx.game.abilities.AbilityEffect;
 import com.mygdx.game.abilities.AbilityExecutionInfo;
@@ -21,7 +22,7 @@ import com.mygdx.game.abilities.PlaySoundEffect;
 import com.mygdx.game.abilities.UnitAnimationEffect;
 import com.mygdx.game.abilities.UnitManeuverEffect;
 import com.mygdx.game.audio.MusicalEmotion;
-import com.mygdx.game.battle.AIController;
+import com.mygdx.game.battle.BattlingAIController;
 import com.mygdx.game.controller.Player;
 import com.mygdx.game.renderer.TintScreenEffect;
 import com.mygdx.game.screens.GameScreen;
@@ -36,9 +37,9 @@ public class BattleController {
 	//List<Unit> units = new ArrayList<Unit>();
 	//List<MapRegion> regions = new ArrayList<MapRegion>();
 	
-	AIController enemyAIController;
+	BattlingAIController enemyAIController;
 	
-	MapRegion unitPositions[][] = new MapRegion[2][3];
+	
 	
 	Unit units[][] = new Unit[2][3];
 	
@@ -51,64 +52,21 @@ public class BattleController {
 		
 		map = AssetCenter.getManager().get("maps/grassbattle.tmx");
 		
-		loadRegions();
 		
 		
-		enemyAIController = new AIController(this);
+		enemyAIController = new BattlingAIController(this);
 	}
 	
-	
-	private void loadRegions()
-	{
-		
-		for(MapLayer layer : map.getLayers())
-		{
-			if(layer.getName().equals("regions")){
-				for(MapObject obj: layer.getObjects())
-				{
-					Rectangle rect = null;
-					
-					if(obj instanceof PolygonMapObject)
-					{
-						PolygonMapObject poly = (PolygonMapObject) obj;
-											
-						rect = poly.getPolygon().getBoundingRectangle();
-					
-					}
-					
-				if(obj instanceof RectangleMapObject){
-					rect = ((RectangleMapObject) obj).getRectangle();
-				}
-				
-				if(rect!=null)
-				{
-					int team = 0;
-					int unit = 0;
-					
-					if(obj.getProperties().containsKey("team") && obj.getProperties().containsKey("unit"))
-					{
-					team = Integer.parseInt((String) obj.getProperties().get("team"));
-					unit = Integer.parseInt((String) obj.getProperties().get("unit"));
-					
-					unitPositions[team][unit] = new MapRegion(obj.getName(),rect);
-					}
-					
-				}
-				
-			
-				
-				}
-			}
-			
-		}
-		
-	}
 	
 
 	public void initBattle() {
+		
+		CommonSounds.STARTBATTLE.play(0.5f);
+		
+		
 		enemyAIController.initBattle();
 		
-		GameScreen.getBattleRenderer().initBattle();
+		
 		GameScreen.getGUIController().getBattleInterfaceController().initBattle();
 		
 		GameScreen.getGUIController().getScreenEffectManager().forceScreenEffect( new TintScreenEffect(Color.BLACK) );		
@@ -126,13 +84,10 @@ public class BattleController {
 				
 				if(getUnits()[team][unit] != null && getUnits()[team][unit].getSprite()!=null){
 					
-					getUnits()[team][unit].getBattleModel().setBattleSpot(
-							getUnitPositions()[team][unit].getCenter().cpy().scl(1/16f)    );
-					
-					
+					getUnits()[team][unit].getWorldModel().setBattleSpot(
+							getUnits()[team][unit].getWorldModel().getPosition().cpy()    );
+										
 					}
-				
-				
 			}
 			
 		}
@@ -144,8 +99,10 @@ public class BattleController {
 	public void endBattle(){
 		System.out.println("ending battle");
 		GameScreen.getMusicController().setMusicalEmotion(MusicalEmotion.CALM);
-		GameScreen.getBattleRenderer().endBattle();
+		
 		GameScreen.getGUIController().getBattleInterfaceController().endBattle();
+		
+		CommonSounds.POWERUP.play(0.5f);
 	}
 	
 	public void update(float delta)
@@ -158,7 +115,7 @@ public class BattleController {
 				if(units[team][unit]!=null)
 				{
 				units[team][unit].update(delta);
-				units[team][unit].getBattleModel().update(delta);
+			
 				}
 			}
 		}
@@ -200,11 +157,6 @@ public class BattleController {
 	}
 
 
-	public MapRegion[][] getUnitPositions() {
-		
-		return unitPositions;
-	}
-
 
 	public void addEnemy(Unit unit) {
 		units[1][0] = unit;
@@ -213,7 +165,7 @@ public class BattleController {
 
 
 	public void executeUnitAbility(AbilityExecutionInfo info) {
-		AbilityType type = AbilityType.SLASH;
+		AbilityType type = AbilityType.Slash;
 	
 		System.out.println("executing unit ability in battle!");
 		for(AbilityEffect effect : type.getEffects()){

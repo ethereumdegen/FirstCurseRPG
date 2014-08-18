@@ -5,11 +5,11 @@ import com.mygdx.game.abilities.AbilityExecutionInfo;
 import com.mygdx.game.abilities.AbilityType;
 import com.mygdx.game.entities.BattleController;
 
-public class AIController {
+public class BattlingAIController {
 
 	BattleController battleController;
 	
-	public AIController(BattleController battleController) {
+	public BattlingAIController(BattleController battleController) {
 		this.battleController=battleController;
 	}
 	
@@ -31,11 +31,13 @@ public class AIController {
 		
 		for(Unit enemy : battleController.getUnits()[1])
 		{
-			if(enemy!= null && enemy.cooldownFinished())
+			Unit victim = chooseVictim();
+			
+			if(enemy!= null && enemy.cooldownFinished() && victim.isAlive() && enemy.isAlive())
 			{
-				battleController.executeUnitAbility(new AbilityExecutionInfo(enemy, battleController.getUnits()[0][0], AbilityType.SLASH));
+				battleController.executeUnitAbility(new AbilityExecutionInfo(enemy, victim, chooseAbilityType()));
 				
-				enemy.resetCooldown((float) (5 + Math.random()*3));
+				//enemy.resetCooldown((float) (5 + Math.random()*3));
 			}
 			
 			
@@ -44,6 +46,15 @@ public class AIController {
 		
 		
 		
+	}
+
+	private AbilityType chooseAbilityType() {
+		return AbilityType.BITE;
+	}
+
+	private Unit chooseVictim() {
+		
+		return battleController.getUnits()[0][0];
 	}
 
 }

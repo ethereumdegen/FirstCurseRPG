@@ -223,7 +223,7 @@ public class UnitModel extends WorldSprite{
 		currentManeuver = maneuver.getManeuver();
 		
 		originalPosition = this.getPosition().cpy();
-		targetPosition = maneuver.getTargets()[0].getBattleModel().getPosition().cpy();
+		targetPosition = maneuver.getTargets()[0].getWorldModel().getPosition().cpy();
 		currentInterpolation = maneuver.getInterpolation();
 	}
 

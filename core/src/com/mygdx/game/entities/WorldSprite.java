@@ -71,6 +71,11 @@ public class WorldSprite extends Spatial {
 		
 	}
 	
+	public void setVelocity(float x, float y) {
+		this.velocity = new Vector2(x,y);
+		
+	}
+	
 	public Vector2 getPosition() {
 		
 		return position;
